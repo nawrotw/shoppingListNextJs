@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Roboto as FontSans } from "next/font/google"
+import { Roboto } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/tailwindUtils";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ReactNode } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-const fontSans = FontSans({
+const fontSans = Roboto({
   weight: '400',
   subsets: ['latin'],
   variable: "--font-sans",
