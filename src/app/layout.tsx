@@ -5,6 +5,7 @@ import { cn } from "@/lib/tailwindUtils";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ReactNode } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { NavigationBar } from "@/components/composite/NavigationBar";
 
 const fontSans = Roboto({
   weight: ['300','400', '500'],
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: Props) {
       disableTransitionOnChange
     >
       {children}
+      <NavigationBar className='fixed bottom-0 left-0 right-0' />
       <SpeedInsights/>
     </ThemeProvider>
     </body>

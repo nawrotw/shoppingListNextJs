@@ -22,8 +22,7 @@ export const Header = (props: HeaderProps) => {
   const { title, leftText, leftIcon, rightText, rightIcon } = props;
   return <div className="border-b flex items-stretch h-12">
     <div className="flex-1 flex ">
-      {leftIcon && !leftText && icons[leftIcon]}
-      {leftText &&
+      {(leftText || leftIcon) &&
         <LinkButton>
           {leftIcon && icons[leftIcon]}
           {leftText}

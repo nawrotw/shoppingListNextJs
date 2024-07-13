@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <main className="p-4">
-      <Header leftText='Cancel' title='Add to Shopping List' rightText='Save'></Header>
+      <Header leftIcon='plus' title='Lists' rightText='Edit'></Header>
       <ThemePicker/>
 
       <div className='p-4'>
