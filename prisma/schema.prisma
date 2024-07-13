@@ -12,6 +12,7 @@ datasource db {
 
 // When shema is updated run:
 // ==============
+// prisma generate
 // prisma db push
 // ==============
 
@@ -28,8 +29,8 @@ type ListProduct {
   unit      String
 }
 
-model List {
+model ShoppingList {
   id       String        @id @default(auto()) @map("_id") @db.ObjectId
   name     String        @unique
-  products ListProduct[] @unique
+  products ListProduct[]
 }
