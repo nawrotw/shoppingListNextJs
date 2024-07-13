@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const fontSans = Roboto({
-  weight: '400',
+  weight: ['300','400', '500'],
   subsets: ['latin'],
   variable: "--font-sans",
 });

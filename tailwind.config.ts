@@ -27,10 +27,10 @@ const config = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        foreground: "hsl(var(--foreground) / 0.4)",
         primary: {
           DEFAULT: "hsl(var(--primary))",
-          foreground: "rgb(var(--primary-foreground))",
+          foreground: "hsl(var(--primary-foreground) / 0.93)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

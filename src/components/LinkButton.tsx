@@ -8,7 +8,10 @@ export interface LinkButtonProps {
 
 export const LinkButton = ({ children, className }: LinkButtonProps) => {
   return <div
-    className={cn('inline-block px-4 py-2 text-primary-foreground cursor-pointer hover:bg-secondary bg-secondary rounded-md', className)}
+    className={cn(
+      'inline-flex items-center px-4 py-2 text-primary-foreground cursor-pointer hover:bg-secondary',
+      className
+    )}
   >
     {children}
   </div>;

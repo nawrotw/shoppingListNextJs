@@ -5,7 +5,7 @@ import { cn } from "@/lib/tailwindUtils";
 import { Roboto } from "next/font/google";
 
 const fontSans = Roboto({
-  weight: '400',
+  weight: ['300','400', '500'],
   subsets: ['latin'],
   variable: "--font-sans",
 });

@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { ThemePicker } from "@/components/ThemePicker";
 import { LinkButton } from "@/components/LinkButton";
+import { Header } from "@/components/composite/Header";
 
 export default function Home() {
 
   return (
     <main className="p-4">
+      <Header leftText='Cancel' title='Add to Shopping List' rightText='Save'></Header>
       <ThemePicker/>
+
       <div className='p-4'>
         <h5>Typography:</h5>
         <h1>h1 - Header h1</h1>
