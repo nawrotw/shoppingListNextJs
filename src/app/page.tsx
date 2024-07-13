@@ -2,9 +2,19 @@ import { Button } from "@/components/ui/button";
 import { ThemePicker } from "@/components/ThemePicker";
 import { LinkButton } from "@/components/LinkButton";
 import { Header } from "@/components/composite/Header";
+import db from "@/infrastructure/db/db";
 
-export default function Home() {
+export default async function Home() {
 
+  console.log('create a product...')
+  let product = await db.product.create({
+    data: {
+      name: "Product 1" + crypto.randomUUID(),
+      unit: "kg"
+    }
+  });
+
+  console.log(product);
   return (
     <main className="p-4">
       <Header leftIcon='plus' title='Lists' rightText='Edit'></Header>

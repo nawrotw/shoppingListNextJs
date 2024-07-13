@@ -1,0 +1,35 @@
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// When shema is updated run:
+// ==============
+// prisma db push
+// ==============
+
+model Product {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  unit String
+}
+
+// an embedded document
+type ListProduct {
+  productId String
+  name      String
+  unit      String
+}
+
+model List {
+  id       String        @id @default(auto()) @map("_id") @db.ObjectId
+  name     String        @unique
+  products ListProduct[] @unique
+}
