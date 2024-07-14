@@ -1,14 +1,35 @@
-import { ComponentProps } from "react";
+import { ComponentProps, MouseEvent } from "react";
 import { cn } from "@/lib/tailwindUtils";
 import Link from "next/link";
 
-export const LinkButton = (props: ComponentProps<typeof Link>) => {
+export type LinkButtonProps = Omit<ComponentProps<typeof Link>, 'href'> & {
+  href?: string;
+  disabled?: boolean;
+};
 
-  const { className, ...restProps } = props;
+export const LinkButton = (props: LinkButtonProps) => {
 
-  return <Link {...restProps} className={cn(
-    'inline-flex items-center px-4 py-2 text-primary-foreground cursor-pointer hover:bg-secondary',
-    props.className
-  )}
+  const { className, href = '', onClick, disabled, ...restProps } = props;
+
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (href) return;
+
+    e.preventDefault();
+    if (!onClick) {
+      console.warn('Nor href nor onClick is defined. Click has no effect');
+      return;
+    }
+    onClick(e);
+  }
+
+  return <Link
+    {...restProps}
+    className={cn(
+      'inline-flex items-center px-4 py-2 text-primary-foreground cursor-pointer hover:bg-secondary',
+      disabled && "cursor-not-allowed text-muted-foreground",
+      props.className
+    )}
+    href={href}
+    onClick={handleClick}
   />
 }

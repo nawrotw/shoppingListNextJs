@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+'use client'
+import { ReactNode, MouseEvent } from "react";
 import { LinkButton } from "@/components/LinkButton";
 import { ChevronLeft, Plus } from "lucide-react";
 
@@ -9,34 +10,40 @@ const icons: Record<IconType, ReactNode> = {
   plus: <Plus className="size-6"/>,
 }
 
+export interface ActionProps {
+  text?: string;
+  icon?: IconType;
+  href?: string;
+  onClick?: (event: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
+  disabled?: boolean;
+}
+
 export interface HeaderProps {
   title: string;
-  leftText?: string;
-  leftIcon?: IconType;
-  rightText?: string;
-  rightIcon?: IconType;
+  left?: ActionProps;
+  right?: ActionProps;
 }
 
 export const Header = (props: HeaderProps) => {
+  const { title, left, right } = props;
 
-  const { title, leftText, leftIcon, rightText, rightIcon } = props;
   return <div className="border-b flex items-stretch h-12">
     <div className="flex-1 flex ">
-      {(leftText || leftIcon) &&
-        <LinkButton>
-          {leftIcon && icons[leftIcon]}
-          {leftText}
-        </LinkButton>
-      }
+      {left && <HeaderAction {...left}/>}
     </div>
-    <div className='self-center text-center font-medium'>{title}</div>
-    <div className="flex-1 flex justify-end items-center">
-      {(rightText || rightIcon) &&
-        <LinkButton className='h-full'>
-          {rightText}
-          {rightIcon && icons[rightIcon]}
-        </LinkButton>
-      }
+    <div className='self-center text-center font-medium'>
+      {title}
+    </div>
+    <div className="flex-1 flex justify-end">
+      {right && <HeaderAction {...right} iconRight/>}
     </div>
   </div>
+}
+
+function HeaderAction({ text, icon, iconRight, href = '', onClick, disabled }: ActionProps & { iconRight?: boolean }) {
+  return <LinkButton href={href} className='h-full' onClick={onClick} disabled={disabled}>
+    {icon && !iconRight && icons[icon]}
+    {text}
+    {icon && iconRight && icons[icon]}
+  </LinkButton>
 }
