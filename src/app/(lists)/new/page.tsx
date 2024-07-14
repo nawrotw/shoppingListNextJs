@@ -3,6 +3,7 @@
 import { Header } from "@/components/composite/Header";
 import { ShoppingListForm } from "@/app/(lists)/_components/ShoppingListForm";
 import { useState, useRef } from "react";
+import { ViewContent } from "@/components/composite/ViewContent";
 
 export default function NewListPage() {
 
@@ -13,14 +14,14 @@ export default function NewListPage() {
     formRef.current?.requestSubmit()
   }
 
-  return (
-    <main className="p-4">
-      <Header
-        title='Lists'
-        left={{ text: 'Cancel', href: '/' }}
-        right={{ text: !pending ? 'Save' : 'Save...', disabled: pending, onClick: handleSave }}
-      />
-      <ShoppingListForm onPending={setPending} formRef={formRef} />
-    </main>
-  );
+  return (<>
+    <Header
+      title='Lists'
+      left={{ text: 'Cancel', href: '/' }}
+      right={{ text: !pending ? 'Save' : 'Save...', disabled: pending, onClick: handleSave }}
+    />
+    <ViewContent>
+      <ShoppingListForm onPending={setPending} formRef={formRef}/>
+    </ViewContent>
+  </>);
 }

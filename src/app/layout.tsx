@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { NavigationBar } from "@/components/composite/NavigationBar";
 
 const fontSans = Roboto({
-  weight: ['300','400', '500'],
+  weight: ['300', '400', '500'],
   subsets: ['latin'],
   variable: "--font-sans",
 });
@@ -25,7 +25,11 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
-    <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+    <body className={cn(
+      "h-screen flex flex-col bg-background",
+      'font-sans antialiased',
+      fontSans.variable
+    )}>
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
@@ -33,7 +37,7 @@ export default function RootLayout({ children }: Props) {
       disableTransitionOnChange
     >
       {children}
-      <NavigationBar className='fixed bottom-0 left-0 right-0' />
+      <NavigationBar className=''/>
       <SpeedInsights/>
     </ThemeProvider>
     </body>

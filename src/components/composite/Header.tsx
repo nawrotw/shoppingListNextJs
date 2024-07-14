@@ -2,6 +2,7 @@
 import { ReactNode, MouseEvent } from "react";
 import { LinkButton } from "@/components/LinkButton";
 import { ChevronLeft, Plus } from "lucide-react";
+import { cn } from "@/lib/tailwindUtils";
 
 type IconType = 'arrowLeft' | 'plus';
 
@@ -20,14 +21,15 @@ export interface ActionProps {
 
 export interface HeaderProps {
   title: string;
+  className?: string;
   left?: ActionProps;
   right?: ActionProps;
 }
 
 export const Header = (props: HeaderProps) => {
-  const { title, left, right } = props;
+  const { title, left, right, className } = props;
 
-  return <div className="border-b flex items-stretch h-12">
+  return <div className={cn("border-b flex items-stretch h-12", className)}>
     <div className="flex-1 flex ">
       {left && <HeaderAction {...left}/>}
     </div>
