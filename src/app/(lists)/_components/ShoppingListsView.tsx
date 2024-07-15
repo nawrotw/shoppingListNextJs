@@ -16,7 +16,6 @@ export default function ShoppingListsView({ lists }: { lists: ShoppingList[] }) 
   const [searchTerm, setSearchTerm] = useState('');
   const filteredLists = lists.filter(({ name }) => name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-
   return (<>
     <Header
       title='Lists'

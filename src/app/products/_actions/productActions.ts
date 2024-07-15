@@ -4,42 +4,38 @@ import db from "@/infrastructure/db/db"
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { wait } from "@/utils/wait";
 
 const addSchema = z.object({
   name: z.string().min(1),
+  unit: z.string().min(1),
 });
 
 const editSchema = addSchema.extend({});
 
 
-export async function createShoppingList(prevState: unknown, formData: FormData) {
-  await wait(200);
+export async function addProduct(prevState: unknown, formData: FormData) {
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
   if (!result.success) {
     console.log('errors', result.error.formErrors)
     return result.error.formErrors.fieldErrors
   }
 
-  const { name } = result.data;
+  const { name, unit } = result.data;
 
-  console.log("List.name:", name);
-  let product = await db.shoppingList.create({
+  let product = await db.product.create({
     data: {
       name: name,
-      products: []
+      unit: unit,
     }
   });
 
-  console.log('Product', product);
-
   revalidatePath("/")
-  revalidatePath("/lists")
+  revalidatePath("/products")
 
-  redirect("/")
+  redirect("/products"); // TODO wkn pass from parameters?
 }
 
-export async function updateShoppingList(
+export async function updateProduct(
   id: string,
   prevState: unknown,
   formData: FormData
@@ -47,35 +43,37 @@ export async function updateShoppingList(
 
   const result = editSchema.safeParse(Object.fromEntries(formData.entries()))
   if (!result.success) {
+    console.log('parse failed', result.error);
     return result.error.formErrors.fieldErrors
   }
 
-  const { name } = result.data
-  const list = await db.shoppingList.findUnique({ where: { id } })
+  const { name, unit } = result.data
+  const product = await db.product.findUnique({ where: { id } })
 
-  if (list == null) return notFound();
+  if (product == null) return notFound();
 
-  await db.shoppingList.update({
+  await db.product.update({
     where: { id },
     data: {
       name: name,
+      unit: unit,
     },
   })
 
-  revalidatePath("/")
-  revalidatePath("/lists")
+  revalidatePath("/");
+  revalidatePath("/products");
 
-  redirect("/")
+  redirect("/products");
 }
 
 
-export async function deleteShoppingList(id: string) {
-  const list = await db.shoppingList.delete({ where: { id } })
+export async function deleteProduct(id: string) {
+  const product = await db.product.delete({ where: { id } })
 
-  if (list == null) return notFound()
+  if (product == null) return notFound()
 
   revalidatePath("/")
-  revalidatePath("/lists")
+  revalidatePath("/products")
 
-  redirect("/")
+  redirect("/products");
 }

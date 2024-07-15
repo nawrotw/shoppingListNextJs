@@ -3,20 +3,21 @@
 import { Header } from "@/components/composite/Header";
 import { useRef, useTransition, MouseEvent, useState } from "react";
 import { ViewContent } from "@/components/composite/ViewContent";
-import { ShoppingList } from "@prisma/client";
+import { Product } from "@prisma/client";
 import { useFormState } from "react-dom";
-import { createShoppingList, updateShoppingList, deleteShoppingList } from "@/app/(lists)/_actions/shoppingListActions";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { DeleteConfirmationDialog } from "@/components/composite/DeleteComfirmationDialog";
 import { cn } from "@/lib/tailwindUtils";
+import { addProduct, updateProduct, deleteProduct } from "@/app/products/_actions/productActions";
 
 export interface ShoppingListFormViewProps {
-  list?: ShoppingList | null;
+  product?: Product | null;
 }
 
-export const ShoppingListFormView = ({ list }: ShoppingListFormViewProps) => {
+const parentUrl = '/products';
+export const ProductFormView = ({ product }: ShoppingListFormViewProps) => {
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -25,16 +26,16 @@ export const ShoppingListFormView = ({ list }: ShoppingListFormViewProps) => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
   const [error, action] = useFormState(
-    list == null ? createShoppingList : updateShoppingList.bind(null, list.id),
+    product == null ? addProduct : updateProduct.bind(null, product.id),
     {}
   );
 
   const handleSave = () => {
-    formRef.current?.requestSubmit();
+    formRef.current?.requestSubmit()
   }
 
   const handleAction = (formData: FormData) => {
-    startTransition(async () => action(formData));
+    startTransition(() => action(formData));
   }
 
   const handleDeleteOpen = (e: MouseEvent<HTMLButtonElement>) => {
@@ -43,30 +44,33 @@ export const ShoppingListFormView = ({ list }: ShoppingListFormViewProps) => {
   }
 
   const handleDelete = () => {
-    if (!list) return;
-    startDeleteTransition(async () => {
-      setDeleteDialogOpen(false);
-      await deleteShoppingList(list.id);
-    });
+    if (!product) return;
+    startDeleteTransition(() => deleteProduct(product.id));
   }
 
   return (<>
     <Header
       title='Lists'
-      left={{ text: 'Cancel', href: '/' }}
+      left={{ text: 'Cancel', href: parentUrl }}
       right={{ text: !isPending ? 'Save' : 'Save...', disabled: isPending || isDeletePending, onClick: handleSave }}
     />
     <ViewContent>
       <form className='space-y-8' action={handleAction} ref={formRef}>
         <div className='space-y-2'>
           <Label htmlFor="productName">Name</Label>
-          <Input id="productName" type="text" name="name" autoFocus required defaultValue={list?.name || ""}/>
+          <Input id="productName" type="text" name="name" autoFocus required defaultValue={product?.name || ""}/>
           {error.name && <div className="text-destructive">{error.name}</div>}
+        </div>
+
+        <div className='space-y-2'>
+          <Label htmlFor="productName">Unit</Label>
+          <Input id="productName" type="text" name="unit" required defaultValue={product?.unit || "kg"}/>
+          {error.unit && <div className="text-destructive">{error.unit}</div>}
         </div>
 
         <Button type="submit" className='hidden'>NotVisible</Button> {/* Default action on enter*/}
 
-        {list && <div className='space-y-2'>
+        {product && <div className='space-y-2'>
           <Label htmlFor="productDelete">Delete</Label>
           <Button
             className={cn('block w-full', buttonVariants({ variant: "destructive" }))}

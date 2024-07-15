@@ -16,7 +16,7 @@ export const LinkButton = (props: LinkButtonProps) => {
 
     e.preventDefault();
     if (!onClick) {
-      console.warn('Nor href nor onClick is defined. Click has no effect');
+      console.warn('[LinkButton] onClick nor href is defined. Click has no effect');
       return;
     }
     onClick(e);
