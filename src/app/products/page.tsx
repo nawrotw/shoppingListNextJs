@@ -1,12 +1,9 @@
-import { Header } from "@/components/composite/Header";
-import { ViewContent } from "@/components/composite/ViewContent";
+import ProductListClientPage from "@/app/products/pageClient";
+import db from "@/infrastructure/db/db";
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
 
-  return (<>
-    <Header title='Products' right={{ icon: 'plus' }}></Header>
-    <ViewContent>
-      <h1>Products</h1>
-    </ViewContent>
-  </>);
+  const products = await db.product.findMany({});
+
+  return (<ProductListClientPage products={products}/>);
 }

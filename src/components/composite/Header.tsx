@@ -22,14 +22,15 @@ export interface ActionProps {
 export interface HeaderProps {
   title: string;
   className?: string;
+  children?: ReactNode;
   left?: ActionProps;
   right?: ActionProps;
 }
 
-export const Header = (props: HeaderProps) => {
+export const HeaderBase = (props: HeaderProps) => {
   const { title, left, right, className } = props;
 
-  return <div className={cn("border-b flex items-stretch h-12", className)}>
+  return <div className={cn("flex items-stretch h-12", className)}>
     <div className="flex-1 flex ">
       {left && <HeaderAction {...left}/>}
     </div>
@@ -39,6 +40,15 @@ export const Header = (props: HeaderProps) => {
     <div className="flex-1 flex justify-end">
       {right && <HeaderAction {...right} iconRight/>}
     </div>
+  </div>
+}
+
+export const Header = ({children, ...props}: HeaderProps) => {
+  if(!children) return <HeaderBase {...props} className='border-b'/>;
+
+  return <div className='border-b'>
+    <HeaderBase {...props}/>
+    {children}
   </div>
 }
 
