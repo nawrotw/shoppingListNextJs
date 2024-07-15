@@ -1,7 +1,7 @@
 'use client';
 
 import { Header } from "@/components/composite/Header";
-import { useRef, useTransition, MouseEvent } from "react";
+import { useRef, useTransition, MouseEvent, useState } from "react";
 import { ViewContent } from "@/components/composite/ViewContent";
 import { ShoppingList } from "@prisma/client";
 import { useFormState } from "react-dom";
@@ -9,7 +9,9 @@ import { createShoppingList, updateShoppingList, deleteShoppingList } from "@/ap
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { DeleteConfirmationDialog } from "@/components/composite/DeleteComfirmationDialog";
+import { cn } from "@/lib/tailwindUtils";
 
 export interface ShoppingListFormViewProps {
   list?: ShoppingList | null;
@@ -17,36 +19,39 @@ export interface ShoppingListFormViewProps {
 
 export const ShoppingListFormView = ({ list }: ShoppingListFormViewProps) => {
 
-  const [error, action] = useFormState(
-    list == null ? createShoppingList : updateShoppingList.bind(null, list.id),
-    {}
-  );
-
-  // const [pending, setPending] = useState(false);
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
   const [isPending, startTransition] = useTransition();
   const [isDeletePending, startDeleteTransition] = useTransition();
-  const router = useRouter();
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+  const [error, action] = useFormState(
+    list == null ? createShoppingList : updateShoppingList.bind(null, list.id),
+    {}
+  );
 
   const handleSave = () => {
     formRef.current?.requestSubmit()
   }
 
   const handleAction = (formData: FormData) => {
-    console.log('handleAction')
     startTransition(async () => {
       action(formData);
     });
-
   }
 
-  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
-    if (!list) return;
+  const handleDeleteOpen = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setDeleteDialogOpen(true);
+  }
+
+  const handleDelete = () => {
+    if (!list) return;
     startDeleteTransition(async () => {
+      setDeleteDialogOpen(false);
       await deleteShoppingList(list.id);
-      router.push('/')
+      router.push('/');
     });
   }
 
@@ -69,13 +74,19 @@ export const ShoppingListFormView = ({ list }: ShoppingListFormViewProps) => {
         {list && <div className='space-y-2'>
           <Label htmlFor="productDelete">Delete</Label>
           <Button
-            className='block w-full bg-destructive text-destructive-foreground'
-            onClick={handleDelete}
+            className={cn('block w-full', buttonVariants({ variant: "destructive" }))}
+            onClick={handleDeleteOpen}
             disabled={isDeletePending}
           >{!isDeletePending ? 'Delete' : 'Delete...'}</Button>
         </div>}
 
       </form>
     </ViewContent>
+    
+    <DeleteConfirmationDialog
+      open={isDeleteDialogOpen}
+      onClose={() => setDeleteDialogOpen(false)}
+      onConfirm={handleDelete}
+    />
   </>);
 }
