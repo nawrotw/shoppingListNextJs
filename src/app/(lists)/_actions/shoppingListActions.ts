@@ -55,7 +55,7 @@ export async function updateShoppingList(
 
   if (list == null) return notFound();
 
-  await db.product.update({
+  await db.shoppingList.update({
     where: { id },
     data: {
       name: name,

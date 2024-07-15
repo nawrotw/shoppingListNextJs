@@ -1,9 +1,9 @@
 import db from "@/infrastructure/db/db";
-import ListClientPage from "@/app/(lists)/pageClient";
+import ListsView from "@/app/(lists)/_components/ShoppingListsView";
 
 export default async function ListPage() {
 
   const lists = await db.shoppingList.findMany({});
 
-  return (<ListClientPage lists={lists} />);
+  return (<ListsView lists={lists} />);
 }
