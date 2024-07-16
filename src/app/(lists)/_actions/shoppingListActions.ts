@@ -21,7 +21,7 @@ export async function createShoppingList(prevState: unknown, formData: FormData)
 
   const { name } = result.data;
 
-  let product = await db.shoppingList.create({
+  const product = await db.shoppingList.create({
     data: {
       name: name,
       products: []

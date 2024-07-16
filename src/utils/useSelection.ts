@@ -1,9 +1,10 @@
-import { useState, useCallback, useEffect, DependencyList } from "react";
+import { useState, useCallback } from "react";
 
 interface InitiallySelected<T, Id> {
   items: Array<T>;
   getById: (item: T) => Id;
 }
+
 export interface UseSelectionProps<T, Id> {
   initiallySelected: InitiallySelected<T, Id>;
   onChange?: (id: Id, selectedIds: Map<Id, boolean>) => void;
@@ -36,7 +37,7 @@ export const useSelection = <T, Id>(props: UseSelectionProps<T, Id>): RetType<Id
         return selectedIds;
       });
     },
-    []
+    [onChange]
   );
 
 

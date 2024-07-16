@@ -1,6 +1,5 @@
 import { LinkButton } from "@/components/LinkButton";
 import { ChevronLeft } from "lucide-react";
-import { CaptionCard } from "@/components/CaptionCard";
 import { Button } from "@/components/ui/button";
 
 

@@ -10,7 +10,7 @@ type NavLinkProps = ComponentProps<typeof Link> & { icon: ReactNode, text: strin
 export function NavLink(props: NavLinkProps) {
   const pathName = usePathname();
   const isCurrentPath = pathName === props.href;
-  const { className, icon, text, children, ...restProps } = props;
+  const { className, icon, text, ...restProps } = props;
   return <Link {...restProps} className={cn(
     "flex-1 flex justify-center",
     "p-4 hover:bg-secondary hover:text-secondary-foreground",

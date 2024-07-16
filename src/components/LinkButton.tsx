@@ -27,7 +27,7 @@ export const LinkButton = (props: LinkButtonProps) => {
     className={cn(
       'inline-flex items-center px-4 py-2 text-primary-foreground cursor-pointer hover:bg-secondary',
       disabled && "cursor-not-allowed text-muted-foreground",
-      props.className
+      className
     )}
     href={href}
     onClick={handleClick}

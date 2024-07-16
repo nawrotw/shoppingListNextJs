@@ -13,7 +13,7 @@ const addSchema = z.object({
 const editSchema = addSchema.extend({});
 
 
-export async function addProduct(prevState: unknown, formData: FormData) {
+export async function addProduct(_prevState: unknown, formData: FormData) {
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
   if (!result.success) {
     console.log('errors', result.error.formErrors)
@@ -22,7 +22,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
   const { name, unit } = result.data;
 
-  let product = await db.product.create({
+  await db.product.create({
     data: {
       name: name,
       unit: unit,
@@ -37,7 +37,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
 export async function updateProduct(
   id: string,
-  prevState: unknown,
+  _prevState: unknown,
   formData: FormData
 ) {
 

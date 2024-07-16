@@ -42,4 +42,6 @@ export const ProductRow = memo((props: ProductListItem) => {
         </Fragment>)}
     </div>
   </Link>
-})
+});
+
+ProductRow.displayName = 'ProductRow';

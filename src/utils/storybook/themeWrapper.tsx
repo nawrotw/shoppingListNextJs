@@ -10,6 +10,7 @@ const fontSans = Roboto({
   variable: "--font-sans",
 });
 
+// eslint-disable-next-line react/display-name
 export const themeWrapper = <T, >(ComponentFn: (props: T) => ReactElement) => (props: T) => {
 
   return (

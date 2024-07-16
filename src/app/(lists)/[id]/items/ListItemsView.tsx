@@ -21,7 +21,7 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
         // Cannot update a component (`Router`) while rendering a different component (`ShoppingListItemsView`)
         shoppingListUpdateProductChecked(list.id, id, selectedIds.has(id));
       })
-    }, [])
+    }, [list.id])
   });
 
   const [searchTerm, setSearchTerm] = useState('');
