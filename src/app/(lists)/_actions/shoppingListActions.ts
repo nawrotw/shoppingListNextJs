@@ -4,7 +4,7 @@ import db from "@/infrastructure/db/db"
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { wait } from "@/utils/wait";
+import { ListProduct, Product } from "@prisma/client";
 
 const addSchema = z.object({
   name: z.string().min(1),
@@ -14,16 +14,13 @@ const editSchema = addSchema.extend({});
 
 
 export async function createShoppingList(prevState: unknown, formData: FormData) {
-  await wait(200);
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
   if (!result.success) {
-    console.log('errors', result.error.formErrors)
     return result.error.formErrors.fieldErrors
   }
 
   const { name } = result.data;
 
-  console.log("List.name:", name);
   let product = await db.shoppingList.create({
     data: {
       name: name,
@@ -60,7 +57,7 @@ export async function updateShoppingList(
     data: {
       name: name,
     },
-  })
+  });
 
   revalidatePath("/")
   revalidatePath("/lists")
@@ -78,4 +75,63 @@ export async function deleteShoppingList(id: string) {
   revalidatePath("/lists")
 
   redirect("/")
+}
+
+// =============================
+// === ShoppingList.Products ===
+// =============================
+export async function shoppingListUpdateProductChecked(listId: string, productId: string, checked: boolean) {
+  if (!listId) return notFound();
+
+  const shoppingList = await db.shoppingList.findUnique({ where: { id: listId } });
+  if (!shoppingList) return notFound();
+
+  await db.shoppingList.update({
+    where: { id: listId },
+    data: {
+      products: shoppingList.products.map((product) => ({
+          ...product,
+          checked: product.productId === productId ? checked : product.checked
+        })
+      ),
+    },
+  })
+}
+
+export async function shoppingListUpdateProducts(id: string, products: Product[]) {
+  if (!id) {
+    return notFound(); // requestError
+  }
+  if (!products) {
+    return notFound(); // requestError
+  }
+
+  const shoppingList = await db.shoppingList.findUnique({ where: { id } });
+  if (!shoppingList) {
+    return notFound();
+  }
+
+  const listProducts: ListProduct[] = products.map(({ id, name, unit }) => {
+    const existingProduct = shoppingList.products.find(existingProduct => existingProduct.productId === id);
+    if (existingProduct) { // we want to preserve Products which are already on the list (could have been already checked)
+      return existingProduct;
+    }
+    return {
+      productId: id,
+      name,
+      unit,
+      checked: false
+    }
+  });
+  await db.shoppingList.update({
+    where: { id },
+    data: {
+      products: listProducts,
+    },
+  })
+
+  revalidatePath("/")
+  revalidatePath("/lists")
+
+  redirect(`/${id}/items`)
 }

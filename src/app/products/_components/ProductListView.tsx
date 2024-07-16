@@ -5,7 +5,7 @@ import { ViewContent } from "@/components/composite/ViewContent";
 import { HeaderActionBar } from "@/components/HeaderActionBar";
 import { Product } from "@prisma/client";
 import { useState } from "react";
-import { ProductListItem } from "@/app/products/_components/ProductListItem";
+import { ProductRow } from "@/app/products/_components/ProductRow";
 
 export default function ProductListView({ products }: { products: Product[] }) {
 
@@ -22,7 +22,7 @@ export default function ProductListView({ products }: { products: Product[] }) {
     </Header>
     <ViewContent>
       {filtered.map((product) => (
-        <ProductListItem key={product.id} href={`/products/${product.id}/edit`} product={product}/>
+        <ProductRow key={product.id} href={`/products/${product.id}/edit`} {...product}/>
       ))}
     </ViewContent>
   </>);

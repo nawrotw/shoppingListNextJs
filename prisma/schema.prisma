@@ -23,14 +23,15 @@ model Product {
 }
 
 // an embedded document
-type ListProduct {
+type ShoppingListProduct {
   productId String
   name      String
   unit      String
+  checked   Boolean
 }
 
 model ShoppingList {
-  id       String        @id @default(auto()) @map("_id") @db.ObjectId
-  name     String        @unique
-  products ListProduct[]
+  id       String                @id @default(auto()) @map("_id") @db.ObjectId
+  name     String                @unique
+  products ShoppingListProduct[]
 }
