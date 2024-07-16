@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/LinkButton";
 import { ViewContent } from "@/components/composite/ViewContent";
 import { CaptionCard } from "@/components/CaptionCard";
+import { ThemePicker } from "@/components/ThemePicker";
 
 export default function ProfilePage() {
 
   return (<>
     <Header title='Profile'></Header>
     <ViewContent>
+      <ThemePicker className='absolute right-1 top-1'/>
       <CaptionCard title='Typography' className='block my-2'>
         <h5>Typography:</h5>
         <h1>h1 - Header h1</h1>

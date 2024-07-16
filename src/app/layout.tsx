@@ -26,7 +26,7 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
     <body className={cn(
-      "h-screen flex flex-col bg-background",
+      "h-dvh flex flex-col bg-background",
       'font-sans antialiased',
       fontSans.variable
     )}>
