@@ -1,16 +1,17 @@
-import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '@prisma/client'
+import { PrismaClient as PrismaClientEdge } from '@prisma/client/edge'
+import { withAccelerate } from "@prisma/extension-accelerate";
 
-// import { PrismaClient } from '@prisma/client/edge'
-// import { withAccelerate } from "@prisma/extension-accelerate";
-
-console.log('[Db connection created] process.env.NODE_ENV:', process.env.NODE_ENV)
+console.log('[Db connection created] process.env.NODE_ENV:', process.env.NODE_ENV);
+console.log('IS_VERCEL_EGDE:', Boolean(process.env.IS_VERCEL_EGDE));
 
 const prismaClientSingleton = () => {
-  return new PrismaClient({
+  // const PrismaClientClass = process.env.IS_VERCEL_EGDE ? PrismaClientEdge : PrismaClient
+  return new PrismaClientEdge({
     log: [/*'query',*/ 'info', 'warn', 'error'],
     errorFormat: 'pretty',
   })
-    // .$extends(withAccelerate())
+    .$extends(withAccelerate())
 }
 
 

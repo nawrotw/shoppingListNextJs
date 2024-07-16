@@ -3,7 +3,7 @@
 import { Header } from "@/components/composite/Header";
 import { ViewContent } from "@/components/composite/ViewContent";
 import { HeaderActionBar } from "@/components/HeaderActionBar";
-import { ShoppingList, ListProduct } from "@prisma/client";
+import { ShoppingList, ShoppingListProduct } from "@prisma/client";
 import { useState, useMemo, useCallback } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";
@@ -26,7 +26,7 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filtered = useMemo<ListProduct[]>(() =>
+  const filtered = useMemo<ShoppingListProduct[]>(() =>
       list.products
         .filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .map(product => ({
@@ -53,7 +53,7 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
     </Header>
     <ViewContent>
       {filtered.length === 0 && <p className='text-center mt-6'>No items</p>}
-      {filtered.map((product: ListProduct) => (
+      {filtered.map(product => (
         <ProductRow
           key={product.productId}
           id={product.productId}

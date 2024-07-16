@@ -4,7 +4,7 @@ import db from "@/infrastructure/db/db"
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { ListProduct, Product } from "@prisma/client";
+import { ShoppingListProduct, Product } from "@prisma/client";
 
 const addSchema = z.object({
   name: z.string().min(1),
@@ -96,6 +96,9 @@ export async function shoppingListUpdateProductChecked(listId: string, productId
       ),
     },
   })
+
+  revalidatePath("/")
+  revalidatePath("/lists")
 }
 
 export async function shoppingListUpdateProducts(id: string, products: Product[]) {
@@ -111,7 +114,7 @@ export async function shoppingListUpdateProducts(id: string, products: Product[]
     return notFound();
   }
 
-  const listProducts: ListProduct[] = products.map(({ id, name, unit }) => {
+  const listProducts: ShoppingListProduct[] = products.map(({ id, name, unit }) => {
     const existingProduct = shoppingList.products.find(existingProduct => existingProduct.productId === id);
     if (existingProduct) { // we want to preserve Products which are already on the list (could have been already checked)
       return existingProduct;
