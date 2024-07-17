@@ -7,7 +7,7 @@ import { Product, ShoppingList } from "@prisma/client";
 import { useState, useTransition, useMemo } from "react";
 import { ProductRow, ProductListItemActions } from "@/app/products/_components/ProductRow";
 import { useRouter } from "next/navigation";
-import { shoppingListUpdateProducts } from "@/app/domain/shoppingList/shoppingListActions";
+import { shoppingListUpdateProducts } from "@/domain/shoppingList/shoppingListActions";
 import { useSelection } from "@/utils/useSelection";
 
 interface SelectableProduct extends Product {

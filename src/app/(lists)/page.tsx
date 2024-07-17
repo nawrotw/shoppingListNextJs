@@ -1,5 +1,5 @@
 import { ShoppingListsView } from "@/app/(lists)/_components/ShoppingListsView";
-import { getShoppingLists } from "@/app/domain/shoppingList/shoppingListsRepo";
+import { getShoppingLists } from "@/domain/shoppingList/shoppingListsRepo";
 
 export default async function ListPage() {
 

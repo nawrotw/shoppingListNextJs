@@ -4,7 +4,7 @@ import db from "@/infrastructure/db/db"
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
 import { ShoppingListProduct, Product } from "@prisma/client";
-import { revalidateShoppingListsPaths } from "@/app/domain/shoppingList/shoppingListPaths";
+import { revalidateShoppingListsPaths } from "@/domain/shoppingList/shoppingListPaths";
 
 const addSchema = z.object({
   name: z.string().min(1),
