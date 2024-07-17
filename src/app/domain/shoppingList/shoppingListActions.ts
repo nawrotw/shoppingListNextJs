@@ -3,8 +3,8 @@
 import db from "@/infrastructure/db/db"
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
-import { revalidatePath } from "next/cache"
 import { ShoppingListProduct, Product } from "@prisma/client";
+import { revalidateShoppingListsPaths } from "@/app/domain/shoppingList/shoppingListPaths";
 
 const addSchema = z.object({
   name: z.string().min(1),
@@ -13,7 +13,7 @@ const addSchema = z.object({
 const editSchema = addSchema.extend({});
 
 
-export async function createShoppingList(prevState: unknown, formData: FormData) {
+export async function createShoppingList(_prevState: unknown, formData: FormData) {
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
   if (!result.success) {
     return result.error.formErrors.fieldErrors
@@ -21,24 +21,21 @@ export async function createShoppingList(prevState: unknown, formData: FormData)
 
   const { name } = result.data;
 
-  const product = await db.shoppingList.create({
+  await db.shoppingList.create({
     data: {
       name: name,
       products: []
     }
   });
 
-  console.log('Product', product);
+  revalidateShoppingListsPaths();
 
-  revalidatePath("/")
-  revalidatePath("/lists")
-
-  redirect("/")
+  redirect("/");
 }
 
 export async function updateShoppingList(
   id: string,
-  prevState: unknown,
+  _prevState: unknown,
   formData: FormData
 ) {
 
@@ -59,10 +56,8 @@ export async function updateShoppingList(
     },
   });
 
-  revalidatePath("/")
-  revalidatePath("/lists")
-
-  redirect("/")
+  revalidateShoppingListsPaths();
+  redirect("/");
 }
 
 
@@ -71,10 +66,8 @@ export async function deleteShoppingList(id: string) {
 
   if (list == null) return notFound()
 
-  revalidatePath("/")
-  revalidatePath("/lists")
-
-  redirect("/")
+  revalidateShoppingListsPaths();
+  redirect("/");
 }
 
 // =============================
@@ -97,19 +90,18 @@ export async function shoppingListUpdateProductChecked(listId: string, productId
     },
   })
 
-  revalidatePath("/")
-  revalidatePath("/lists")
+  revalidateShoppingListsPaths(listId);
 }
 
-export async function shoppingListUpdateProducts(id: string, products: Product[]) {
-  if (!id) {
+export async function shoppingListUpdateProducts(listId: string, products: Product[]) {
+  if (!listId) {
     return notFound(); // requestError
   }
   if (!products) {
     return notFound(); // requestError
   }
 
-  const shoppingList = await db.shoppingList.findUnique({ where: { id } });
+  const shoppingList = await db.shoppingList.findUnique({ where: { id: listId } });
   if (!shoppingList) {
     return notFound();
   }
@@ -127,14 +119,12 @@ export async function shoppingListUpdateProducts(id: string, products: Product[]
     }
   });
   await db.shoppingList.update({
-    where: { id },
+    where: { id: listId },
     data: {
       products: listProducts,
     },
   })
 
-  revalidatePath("/")
-  revalidatePath("/lists")
-
-  redirect(`/${id}/items`)
+  revalidateShoppingListsPaths(listId);
+  redirect(`/${listId}/items`);
 }

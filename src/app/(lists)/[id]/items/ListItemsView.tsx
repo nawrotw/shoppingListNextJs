@@ -7,7 +7,7 @@ import { ShoppingList, ShoppingListProduct } from "@prisma/client";
 import { useState, useMemo, useCallback } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";
-import { shoppingListUpdateProductChecked } from "@/app/(lists)/_actions/shoppingListActions";
+import { shoppingListUpdateProductChecked } from "@/app/domain/shoppingList/shoppingListActions";
 
 export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 

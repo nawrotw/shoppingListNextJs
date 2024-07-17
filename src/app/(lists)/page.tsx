@@ -1,11 +1,9 @@
-import db from "@/infrastructure/db/db";
 import { ShoppingListsView } from "@/app/(lists)/_components/ShoppingListsView";
-
-export const dynamic = 'force-dynamic';
+import { getShoppingLists } from "@/app/domain/shoppingList/shoppingListsRepo";
 
 export default async function ListPage() {
 
-  const lists = await db.shoppingList.findMany({});
+  const lists = await getShoppingLists();
 
   return (<ShoppingListsView lists={lists}/>);
 }

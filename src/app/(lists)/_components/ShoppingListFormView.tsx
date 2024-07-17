@@ -5,7 +5,7 @@ import { useRef, useTransition, MouseEvent, useState } from "react";
 import { ViewContent } from "@/components/composite/ViewContent";
 import { ShoppingList } from "@prisma/client";
 import { useFormState } from "react-dom";
-import { createShoppingList, updateShoppingList, deleteShoppingList } from "@/app/(lists)/_actions/shoppingListActions";
+import { createShoppingList, updateShoppingList, deleteShoppingList } from "@/app/domain/shoppingList/shoppingListActions";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
