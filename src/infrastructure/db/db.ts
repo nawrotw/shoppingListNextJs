@@ -1,12 +1,13 @@
-// import { PrismaClient } from '@prisma/client'
 import { PrismaClient as PrismaClientEdge } from '@prisma/client/edge'
 import { withAccelerate } from "@prisma/extension-accelerate";
 
-console.log('[Db connection created] process.env.NODE_ENV:', process.env.NODE_ENV);
-console.log('IS_VERCEL_EGDE:', Boolean(process.env.IS_VERCEL_EGDE));
+declare const globalThis: {
+  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+} & typeof global;
+
 
 const prismaClientSingleton = () => {
-  // const PrismaClientClass = process.env.IS_VERCEL_EGDE ? PrismaClientEdge : PrismaClient
+  console.log('[Db connection created] process.env.NODE_ENV:', process.env.NODE_ENV);
   return new PrismaClientEdge({
     log: [/*'query',*/ 'info', 'warn', 'error'],
     errorFormat: 'pretty',
@@ -14,13 +15,11 @@ const prismaClientSingleton = () => {
     .$extends(withAccelerate())
 }
 
+// PrismaClient is attached to the `global` object in development to prevent
+// exhausting your database connection limit.
+// Learn more: https://pris.ly/d/help/next-js-best-practices
+const db = globalThis.prismaGlobal ?? prismaClientSingleton();
 
-declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
-} & typeof global;
-
-const db = globalThis.prismaGlobal ?? prismaClientSingleton()
-
-export default db
+export default db;
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = db;
