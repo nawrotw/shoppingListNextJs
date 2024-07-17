@@ -1,4 +1,4 @@
-import { ShoppingListFormView } from "@/app/(lists)/_components/ShoppingListFormView";
+import { ShoppingListFormView } from "@/app/lists/_components/ShoppingListFormView";
 
 export default function NewShoppingListPage() {
 

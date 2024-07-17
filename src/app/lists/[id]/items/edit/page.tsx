@@ -1,5 +1,5 @@
 import db from "@/infrastructure/db/db";
-import { ShoppingListEditProductsView } from "@/app/(lists)/[id]/items/edit/ShoppingListEditProductsView";
+import { ShoppingListEditProductsView } from "@/app/lists/[id]/items/edit/ShoppingListEditProductsView";
 
 export default async function AddProductsPage({ params: { id } }: { params: { id: string } }) {
 

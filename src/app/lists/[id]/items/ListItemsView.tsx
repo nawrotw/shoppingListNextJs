@@ -39,7 +39,7 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
   return (<>
     <Header
       title={list.name}
-      left={{ icon: 'arrowLeft', text: 'Lists', href: '/' }}
+      left={{ icon: 'arrowLeft', text: 'Lists', href: '/lists' }}
       right={{
         href: 'items/edit',
         text: list.products.length > 0 ? 'Edit' : undefined,

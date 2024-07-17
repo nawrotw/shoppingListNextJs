@@ -5,7 +5,7 @@ import { ViewContent } from "@/components/composite/ViewContent";
 import { HeaderActionBar } from "@/components/HeaderActionBar";
 import { ShoppingList } from "@prisma/client";
 import { useState } from "react";
-import { ShoppingListRow } from "@/app/(lists)/_components/ShoppingListRow";
+import { ShoppingListRow } from "@/app/lists/_components/ShoppingListRow";
 import { PencilIcon, AlignJustifyIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -32,9 +32,9 @@ export const ShoppingListsView = ({ lists }: { lists: ShoppingList[] }) => {
         <ShoppingListRow
           key={item.id}
           item={item}
-          href={`/${item.id}/items`}
+          href={`/lists/${item.id}/items`}
           actions={isEditMode && <>
-            <Link href={`/${item.id}/edit`}><PencilIcon className='mx-4 my-2'/></Link>
+            <Link href={`/lists/${item.id}/edit`}><PencilIcon className='mx-4 my-2'/></Link>
             <AlignJustifyIcon className='my-2'/>
           </>}
         />

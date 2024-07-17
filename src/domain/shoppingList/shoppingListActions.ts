@@ -57,7 +57,7 @@ export async function updateShoppingList(
   });
 
   revalidateShoppingListsPaths();
-  redirect("/");
+  redirect("/lists");
 }
 
 
@@ -67,7 +67,7 @@ export async function deleteShoppingList(id: string) {
   if (list == null) return notFound()
 
   revalidateShoppingListsPaths();
-  redirect("/");
+  redirect("/lists");
 }
 
 // =============================
@@ -126,5 +126,5 @@ export async function shoppingListUpdateProducts(listId: string, products: Produ
   })
 
   revalidateShoppingListsPaths(listId);
-  redirect(`/${listId}/items`);
+  redirect(`/lists/${listId}/items`);
 }

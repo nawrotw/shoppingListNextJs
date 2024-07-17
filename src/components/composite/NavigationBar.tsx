@@ -11,7 +11,7 @@ const iconSize = 32;
 export const NavigationBar = ({ className }: NavigationBarProps) => {
 
   return <div className={cn('flex items-center', className)}>
-    <NavLink href='/' icon={<ListIcon size={iconSize}/>} text='Lists'/>
+    <NavLink href='/lists' icon={<ListIcon size={iconSize}/>} text='Lists'/>
     <NavLink href='/products' icon={<PackageSearch size={iconSize}/>} text='Products'/>
     <NavLink href='/recipes' icon={<CookingPot size={iconSize}/>} text='Recipes'/>
     <NavLink href='/profile' icon={<UserPen size={iconSize}/>} text='Profile'/>

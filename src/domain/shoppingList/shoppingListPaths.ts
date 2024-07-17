@@ -1,9 +1,9 @@
 import { revalidatePath } from "next/cache";
 
 const shoppingListsPages = {
-  shoppingLists: '/',
-  shoppingListProducts: '/:id/items',
-  shoppingListProductsEdit: '/:id/items/edit',
+  shoppingLists: '/lists',
+  shoppingListProducts: '/lists/:id/items',
+  shoppingListProductsEdit: '/lists/:id/items/edit',
 }
 
 const shoppingListsPaths = Object.values(shoppingListsPages);

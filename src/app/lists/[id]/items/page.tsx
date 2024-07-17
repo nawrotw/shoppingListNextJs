@@ -1,4 +1,4 @@
-import { ShoppingListItemsView } from "@/app/(lists)/[id]/items/ListItemsView";
+import { ShoppingListItemsView } from "@/app/lists/[id]/items/ListItemsView";
 import { getShoppingListById } from "@/domain/shoppingList/shoppingListsRepo";
 
 export default async function ShoppingListItemsPage({ params: { id } }: { params: { id: string } }) {
