@@ -28,7 +28,7 @@ export const ProductRow = memo((props: ProductListItem) => {
   return <Link
     href={href || ''}
     onClick={handleClick}
-    className='-mx-4 px-4 py-2 border-b flex items-center'
+    className='-mx-4 px-4 h-14 border-b flex items-center'
   >
     <div className='flex items-center'>
       {selected!== undefined &&<div className='mr-2'>|{selected ? 'V' : '_'}|</div>}
