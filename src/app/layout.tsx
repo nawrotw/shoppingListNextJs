@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/tailwindUtils";
@@ -13,6 +13,10 @@ const fontSans = Roboto({
   variable: "--font-sans",
 });
 
+export const viewport: Viewport = {
+  initialScale: 1,
+  width: 'device-width'
+}
 export const metadata: Metadata = {
   title: "Shopping List",
   description: "shoppingListApp, next.js",
