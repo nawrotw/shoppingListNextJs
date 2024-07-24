@@ -19,7 +19,7 @@ export const ShoppingListsView = ({ lists }: { lists: ShoppingList[] }) => {
   return (<>
     <Header
       title='Lists'
-      left={{ icon: 'plus', href: '/new' }}
+      left={{ icon: 'plus', href: 'lists/new' }}
       right={{ text: !isEditMode ? 'Edit' : 'Done', onClick: () => setIsEditMode(mode => !mode) }}
     >
       <HeaderActionBar

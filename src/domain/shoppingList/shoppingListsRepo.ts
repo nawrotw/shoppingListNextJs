@@ -1,13 +1,32 @@
 import { cache } from "@/infrastructure/cache";
 import db from "@/infrastructure/db/db";
+import { revalidatePath } from "next/cache";
 
-export const getShoppingLists = () => db.shoppingList.findMany({});
-// export const getShoppingLists = cache(() => { // TODO wkn cache for Next 15
-//   return db.shoppingList.findMany({});
-// }, ['shoppingLists']);
+export const getShoppingLists = cache(() => {
+  return db.shoppingList.findMany({});
+}, ['DB/shoppingLists']);
 
+export const getShoppingListById2 = (id: string) => db.shoppingList.findUnique({where: {id}})
 export const getShoppingListById = (id: string) => {
   return cache(() => {
     return db.shoppingList.findUnique({where: {id}});
-  }, [`shoppingList_${id}`])()
+  }, [`DB/shoppingLists/${id}`])()
 };
+
+
+const shoppingListsCacheKeys = {
+  allEntities: 'DB/shoppingLists',
+  particularList: 'DB/shoppingLists/:id',
+}
+
+const shoppingListsPaths = Object.values(shoppingListsCacheKeys);
+
+export const revalidateDBShoppingLists = (id?: string) => {
+  shoppingListsPaths.forEach(pathWithId => {
+    const path = id ?
+      pathWithId.replace(':id', id):
+      pathWithId;
+    console.log('[DB] revalidate: ', path)
+    revalidatePath(path);
+  });
+}

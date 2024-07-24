@@ -5,6 +5,7 @@ import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
 import { ShoppingListProduct, Product } from "@prisma/client";
 import { revalidateShoppingListsPaths } from "@/domain/shoppingList/shoppingListPaths";
+import { revalidateDBShoppingLists } from "@/domain/shoppingList/shoppingListsRepo";
 
 const addSchema = z.object({
   name: z.string().min(1),
@@ -28,9 +29,10 @@ export async function createShoppingList(_prevState: unknown, formData: FormData
     }
   });
 
+  revalidateDBShoppingLists();
   revalidateShoppingListsPaths();
 
-  redirect("/");
+  redirect("/lists");
 }
 
 export async function updateShoppingList(
@@ -56,6 +58,7 @@ export async function updateShoppingList(
     },
   });
 
+  revalidateDBShoppingLists();
   revalidateShoppingListsPaths();
   redirect("/lists");
 }
@@ -90,6 +93,7 @@ export async function shoppingListUpdateProductChecked(listId: string, productId
     },
   })
 
+  revalidateDBShoppingLists(listId);
   revalidateShoppingListsPaths(listId);
 }
 
@@ -125,6 +129,7 @@ export async function shoppingListUpdateProducts(listId: string, products: Produ
     },
   })
 
+  revalidateDBShoppingLists(listId);
   revalidateShoppingListsPaths(listId);
   redirect(`/lists/${listId}/items`);
 }
