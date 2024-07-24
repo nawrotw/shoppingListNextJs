@@ -2,6 +2,7 @@ import { Product } from "@prisma/client";
 import Link from "next/link";
 import { memo, ReactNode, Fragment } from "react";
 import { AlignJustifyIcon } from "lucide-react";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 export type ProductListItemActions = 'reorder';
 
@@ -28,10 +29,10 @@ export const ProductRow = memo((props: ProductListItem) => {
   return <Link
     href={href || ''}
     onClick={handleClick}
-    className='-mx-4 px-4 h-14 border-b flex items-center'
+    className='-mx-4 px-4 h-16 border-b flex items-center'
   >
     <div className='flex items-center'>
-      {selected!== undefined &&<div className='mr-2'>|{selected ? 'V' : '_'}|</div>}
+      {selected !== undefined && <Checkbox checked={selected} className='mr-2'/>}
       <div className='truncate hover:text-clip'>{name}</div>
       <div className='ml-2 text-sm text-muted-foreground whitespace-nowrap w-8'>[{unit}]</div>
     </div>
