@@ -8,12 +8,17 @@ import { useState, useMemo, useCallback } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";
 import { shoppingListUpdateProductChecked } from "@/domain/shoppingList/shoppingListActions";
+import { sort } from "fast-sort";
 
 export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 
+  const products = useMemo(() =>
+      sort(list.products).asc([p => p.checked, p => p.name])
+    , [list]);
+
   const [selectedProductIds, toggleSelect] = useSelection({
     initiallySelected: {
-      items: list.products.filter(item => item.checked),
+      items: products.filter(item => item.checked),
       getById: item => item.productId,
     },
     onChange: useCallback((id: string, selectedIds: Map<string, boolean>) => {
@@ -27,13 +32,13 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filtered = useMemo<ShoppingListProduct[]>(() =>
-      list.products
+      products
         .filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .map(product => ({
           ...product,
           checked: selectedProductIds.has(product.productId),
         })),
-    [list.products, selectedProductIds, searchTerm]
+    [products, selectedProductIds, searchTerm]
   );
 
   return (<>
@@ -42,8 +47,8 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
       left={{ icon: 'arrowLeft', text: 'Lists', href: '/lists' }}
       right={{
         href: 'items/edit',
-        text: list.products.length > 0 ? 'Edit' : undefined,
-        icon: list.products.length === 0 ? 'plus' : undefined,
+        text: products.length > 0 ? 'Edit' : undefined,
+        icon: products.length === 0 ? 'plus' : undefined,
       }}
     >
       <HeaderActionBar

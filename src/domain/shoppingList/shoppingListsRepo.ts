@@ -6,7 +6,6 @@ export const getShoppingLists = cache(() => {
   return db.shoppingList.findMany({});
 }, ['DB/shoppingLists']);
 
-export const getShoppingListById2 = (id: string) => db.shoppingList.findUnique({where: {id}})
 export const getShoppingListById = (id: string) => {
   return cache(() => {
     return db.shoppingList.findUnique({where: {id}});
