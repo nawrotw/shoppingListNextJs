@@ -1,9 +1,9 @@
 import { ShoppingListItemsView } from "@/app/lists/[id]/items/ListItemsView";
-import { getShoppingListById } from "@/domain/shoppingList/shoppingListsRepo";
+import { shoppingListsRepo } from "@/domain/shoppingList/shoppingListsRepo";
 
 export default async function ShoppingListItemsPage({ params: { id } }: { params: { id: string } }) {
 
-  const list = await getShoppingListById(id);
+  const list = await shoppingListsRepo.findById(parseInt(id));
 
   return <>
     {!list && <p>List not found</p>}

@@ -1,13 +1,16 @@
 "use server"
 
-import db from "@/infrastructure/db/db"
 import { z } from "zod"
-import { notFound, redirect } from "next/navigation"
+import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
+import { db } from "@/db/db";
+import { products, ProductUnit } from "@/db/schema";
+import { eq } from "drizzle-orm";
+
 
 const addSchema = z.object({
   name: z.string().min(1),
-  unit: z.string().min(1),
+  unit: z.nativeEnum(ProductUnit),
 });
 
 const editSchema = addSchema.extend({});
@@ -20,14 +23,7 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
     return result.error.formErrors.fieldErrors
   }
 
-  const { name, unit } = result.data;
-
-  await db.product.create({
-    data: {
-      name: name,
-      unit: unit,
-    }
-  });
+  await db.insert(products).values(result.data);
 
   revalidatePath("/")
   revalidatePath("/products")
@@ -36,7 +32,7 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
 }
 
 export async function updateProduct(
-  id: string,
+  id: number,
   _prevState: unknown,
   formData: FormData
 ) {
@@ -47,18 +43,11 @@ export async function updateProduct(
     return result.error.formErrors.fieldErrors
   }
 
-  const { name, unit } = result.data
-  const product = await db.product.findUnique({ where: { id } })
+  // co się stanie jak nie ma produktu??
 
-  if (product == null) return notFound();
-
-  await db.product.update({
-    where: { id },
-    data: {
-      name: name,
-      unit: unit,
-    },
-  })
+  await db.update(products)
+    .set(result.data)
+    .where(eq(products.id, id));
 
   revalidatePath("/");
   revalidatePath("/products");
@@ -67,10 +56,10 @@ export async function updateProduct(
 }
 
 
-export async function deleteProduct(id: string) {
-  const product = await db.product.delete({ where: { id } })
+export async function deleteProduct(id: number) {
 
-  if (product == null) return notFound()
+  db.delete(products).where(eq(products.id, id));
+  // if (product == null) return notFound() ?? needed
 
   revalidatePath("/")
   revalidatePath("/products")

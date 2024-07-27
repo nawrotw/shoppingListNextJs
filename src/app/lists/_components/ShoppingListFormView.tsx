@@ -3,7 +3,7 @@
 import { Header } from "@/components/composite/Header";
 import { useRef, useTransition, MouseEvent, useState } from "react";
 import { ViewContent } from "@/components/composite/ViewContent";
-import { ShoppingList } from "@prisma/client";
+import { ShoppingList } from "@/db/schema";
 import { useFormState } from "react-dom";
 import { createShoppingList, updateShoppingList, deleteShoppingList } from "@/domain/shoppingList/shoppingListActions";
 import { Label } from "@/components/ui/label";

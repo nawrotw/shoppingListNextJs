@@ -1,4 +1,4 @@
-import { Product } from "@prisma/client";
+import { Product } from "@/db/schema";
 import Link from "next/link";
 import { memo, ReactNode, Fragment } from "react";
 import { AlignJustifyIcon } from "lucide-react";
@@ -14,7 +14,7 @@ const actionsMap: Record<ProductListItemActions, ReactNode> = {
 export interface ProductListItem extends Product {
   href?: string;
   selected?: boolean;
-  onClick?: (productId: string) => void;
+  onClick?: (id: number) => void;
   actions?: ProductListItemActions[];
 }
 

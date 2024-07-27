@@ -3,7 +3,7 @@
 import { Header } from "@/components/composite/Header";
 import { ViewContent } from "@/components/composite/ViewContent";
 import { HeaderActionBar } from "@/components/HeaderActionBar";
-import { Product, ShoppingList } from "@prisma/client";
+import { Product, ShoppingList } from "@/db/schema";
 import { useState, useTransition, useMemo } from "react";
 import { ProductRow, ProductListItemActions } from "@/app/products/_components/ProductRow";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ export const ShoppingListEditProductsView = ({ list, products }: AddProductsView
 
   const [selectedProductIds, toggleSelect] = useSelection({
     initiallySelected: {
-      items: list.products,
+      items: list.products || [],
       getById: item => item.productId,
     },
   });

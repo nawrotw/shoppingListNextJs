@@ -1,11 +1,12 @@
 "use server"
 
-import db from "@/infrastructure/db/db"
+import { db } from "@/db/db";
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
-import { ShoppingListProduct, Product } from "@prisma/client";
 import { revalidateShoppingListsPaths } from "@/domain/shoppingList/shoppingListPaths";
-import { revalidateDBShoppingLists } from "@/domain/shoppingList/shoppingListsRepo";
+import { revalidateDBShoppingLists, shoppingListsRepo } from "@/domain/shoppingList/shoppingListsRepo";
+import { shoppingLists, Product, NewShoppingListProduct, shoppingListProducts } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 const addSchema = z.object({
   name: z.string().min(1),
@@ -22,12 +23,7 @@ export async function createShoppingList(_prevState: unknown, formData: FormData
 
   const { name } = result.data;
 
-  await db.shoppingList.create({
-    data: {
-      name: name,
-      products: []
-    }
-  });
+  await db.insert(shoppingLists).values({ name });
 
   revalidateDBShoppingLists();
   revalidateShoppingListsPaths();
@@ -36,7 +32,7 @@ export async function createShoppingList(_prevState: unknown, formData: FormData
 }
 
 export async function updateShoppingList(
-  id: string,
+  id: number,
   _prevState: unknown,
   formData: FormData
 ) {
@@ -47,16 +43,10 @@ export async function updateShoppingList(
   }
 
   const { name } = result.data
-  const list = await db.shoppingList.findUnique({ where: { id } })
 
-  if (list == null) return notFound();
-
-  await db.shoppingList.update({
-    where: { id },
-    data: {
-      name: name,
-    },
-  });
+  await db.update(shoppingLists)
+    .set({ name })
+    .where(eq(shoppingLists.id, id))
 
   revalidateDBShoppingLists();
   revalidateShoppingListsPaths();
@@ -64,11 +54,8 @@ export async function updateShoppingList(
 }
 
 
-export async function deleteShoppingList(id: string) {
-  const list = await db.shoppingList.delete({ where: { id } })
-
-  if (list == null) return notFound()
-
+export async function deleteShoppingList(id: number) {
+  await db.delete(shoppingLists).where(eq(shoppingLists.id, id));
   revalidateShoppingListsPaths();
   redirect("/lists");
 }
@@ -76,28 +63,17 @@ export async function deleteShoppingList(id: string) {
 // =============================
 // === ShoppingList.Products ===
 // =============================
-export async function shoppingListUpdateProductChecked(listId: string, productId: string, checked: boolean) {
-  if (!listId) return notFound();
+export async function shoppingListUpdateProductChecked(listId: number, listProductId: number, checked: boolean) {
 
-  const shoppingList = await db.shoppingList.findUnique({ where: { id: listId } });
-  if (!shoppingList) return notFound();
-
-  await db.shoppingList.update({
-    where: { id: listId },
-    data: {
-      products: shoppingList.products.map((product) => ({
-          ...product,
-          checked: product.productId === productId ? checked : product.checked
-        })
-      ),
-    },
-  })
+  await db.update(shoppingListProducts)
+    .set({checked})
+    .where(eq(shoppingListProducts.id, listProductId))
 
   revalidateDBShoppingLists(listId);
   revalidateShoppingListsPaths(listId);
 }
 
-export async function shoppingListUpdateProducts(listId: string, products: Product[]) {
+export async function shoppingListUpdateProducts(listId: number, products: Product[]) {
   if (!listId) {
     return notFound(); // requestError
   }
@@ -105,29 +81,29 @@ export async function shoppingListUpdateProducts(listId: string, products: Produ
     return notFound(); // requestError
   }
 
-  const shoppingList = await db.shoppingList.findUnique({ where: { id: listId } });
+  const shoppingList = await shoppingListsRepo.findById(listId)
   if (!shoppingList) {
     return notFound();
   }
 
-  const listProducts: ShoppingListProduct[] = products.map(({ id, name, unit }) => {
+  const newListProducts: NewShoppingListProduct[] = products.map(({ id, name, unit }) => {
     const existingProduct = shoppingList.products.find(existingProduct => existingProduct.productId === id);
     if (existingProduct) { // we want to preserve Products which are already on the list (could have been already checked)
       return existingProduct;
     }
     return {
-      productId: id,
       name,
       unit,
-      checked: false
+      checked: false,
+      productId: id,
+      shoppingListId: listId
     }
   });
-  await db.shoppingList.update({
-    where: { id: listId },
-    data: {
-      products: listProducts,
-    },
-  })
+
+  await db.delete(shoppingListProducts)
+    .where(eq(shoppingListProducts.shoppingListId, listId));
+
+  await db.insert(shoppingListProducts).values(newListProducts)
 
   revalidateDBShoppingLists(listId);
   revalidateShoppingListsPaths(listId);
