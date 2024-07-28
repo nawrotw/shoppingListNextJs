@@ -20,7 +20,7 @@ export function cache<T extends Callback>(
     const timeLabel = '[Cache:time] key: ' + JSON.stringify(keyParts);
     console.time(timeLabel);
     console.log('[Cache] keyParts:', keyParts, 'Cache hit:', false);
-    const resp = await cb(args);
+    const resp = await cb(...args);
     console.timeEnd(timeLabel);
     return resp;
   }

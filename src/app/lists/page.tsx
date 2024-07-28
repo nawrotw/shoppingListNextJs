@@ -1,9 +1,11 @@
 import { ShoppingListsView } from "@/app/lists/_components/ShoppingListsView";
-import { getShoppingLists } from "@/domain/shoppingList/shoppingListsRepo";
+import { shoppingListsRepo } from "@/domain/shoppingList/ShoppingListsRepo";
+
+// export const runtime = 'nodejs';
 
 export default async function ListPage() {
 
-  const lists = await getShoppingLists();
+  const lists = await shoppingListsRepo.findAll();
 
   return (<ShoppingListsView lists={lists}/>);
 }

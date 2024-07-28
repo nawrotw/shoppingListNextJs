@@ -43,8 +43,6 @@ export async function updateProduct(
     return result.error.formErrors.fieldErrors
   }
 
-  // co się stanie jak nie ma produktu??
-
   await db.update(products)
     .set(result.data)
     .where(eq(products.id, id));
