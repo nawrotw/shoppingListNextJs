@@ -1,6 +1,6 @@
 import { ShoppingListEditProductsView } from "@/app/lists/[id]/items/edit/ShoppingListEditProductsView";
-import { shoppingListsRepo } from "@/domain/shoppingList/shoppingListsRepo";
-import { productsRepo } from "@/domain/products/productsRepo";
+import { shoppingListsRepo } from "@/domain/shoppingList/ShoppingListsRepo";
+import { productsRepo } from "@/domain/products/ProductsRepo";
 
 export default async function AddProductsPage({ params: { id } }: { params: { id: string } }) {
 

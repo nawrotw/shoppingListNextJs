@@ -3,8 +3,7 @@
 import { db } from "@/db/db";
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
-import { revalidateShoppingListsPaths } from "@/domain/shoppingList/shoppingListPaths";
-import { revalidateDBShoppingLists, shoppingListsRepo } from "@/domain/shoppingList/shoppingListsRepo";
+import { revalidateDBShoppingLists, shoppingListsRepo } from "@/domain/shoppingList/ShoppingListsRepo";
 import { shoppingLists, Product, NewShoppingListProduct, shoppingListProducts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -26,7 +25,6 @@ export async function createShoppingList(_prevState: unknown, formData: FormData
   await db.insert(shoppingLists).values({ name });
 
   revalidateDBShoppingLists();
-  revalidateShoppingListsPaths();
 
   redirect("/lists");
 }
@@ -49,14 +47,13 @@ export async function updateShoppingList(
     .where(eq(shoppingLists.id, id))
 
   revalidateDBShoppingLists();
-  revalidateShoppingListsPaths();
   redirect("/lists");
 }
 
 
 export async function deleteShoppingList(id: number) {
   await db.delete(shoppingLists).where(eq(shoppingLists.id, id));
-  revalidateShoppingListsPaths();
+  revalidateDBShoppingLists(id);
   redirect("/lists");
 }
 
@@ -70,18 +67,14 @@ export async function shoppingListUpdateProductChecked(listId: number, listProdu
     .where(eq(shoppingListProducts.id, listProductId))
 
   revalidateDBShoppingLists(listId);
-  revalidateShoppingListsPaths(listId);
 }
 
 export async function shoppingListUpdateProducts(listId: number, products: Product[]) {
-  if (!listId) {
-    return notFound(); // requestError
-  }
-  if (!products) {
+  if (!listId || !products) {
     return notFound(); // requestError
   }
 
-  const shoppingList = await shoppingListsRepo.findById(listId)
+  const shoppingList = await shoppingListsRepo.findById(listId);
   if (!shoppingList) {
     return notFound();
   }
@@ -106,6 +99,5 @@ export async function shoppingListUpdateProducts(listId: number, products: Produ
   await db.insert(shoppingListProducts).values(newListProducts)
 
   revalidateDBShoppingLists(listId);
-  revalidateShoppingListsPaths(listId);
   redirect(`/lists/${listId}/items`);
 }
