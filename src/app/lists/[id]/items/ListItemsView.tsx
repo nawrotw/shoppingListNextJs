@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/composite/Header";
 import { ViewContent } from "@/components/composite/ViewContent";
-import { HeaderActionBar } from "@/components/HeaderActionBar";
+import { HeaderActionBar } from "@/components/composite/HeaderActionBar";
 import { useState, useMemo, useCallback } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";

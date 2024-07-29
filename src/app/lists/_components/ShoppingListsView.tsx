@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/composite/Header";
 import { ViewContent } from "@/components/composite/ViewContent";
-import { HeaderActionBar } from "@/components/HeaderActionBar";
+import { HeaderActionBar } from "@/components/composite/HeaderActionBar";
 import { ShoppingList } from "@/db/schema";
 import { useState } from "react";
 import { ShoppingListRow } from "@/app/lists/_components/ShoppingListRow";
