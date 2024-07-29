@@ -4,18 +4,33 @@
 
 html {
     font-size: 14px;
+    background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    max-width: 450px;
+    margin: auto;
 }
+
+body {
+    flex: 1;
+    @media screen and (min-width: 450px) {
+        box-shadow: 0 0 24px 0 rgba(66, 68, 90, 1);
+        -moz-box-shadow: 0 0 24px 0 rgba(66, 68, 90, 1);
+        -webkit-box-shadow: 0 0 24px 0 rgba(66, 68, 90, 1);
+    }
+}
+
 @layer base {
     :root {
         --background: 0 0% 100%;
-        --foreground: 0 0% 0%;  /*Text main color*/
+        --foreground: 0 0% 0%; /*Text main color*/
         --foreground2: 222.2 84% 4.9%;
         --card: 0 0% 100%;
         --card-foreground: 222.2 84% 4.9%;
         --popover: 0 0% 100%;
         --popover-foreground: 222.2 84% 4.9%;
         --primary: 222.2 47.4% 11.2%;
-        --primary-foreground: 209 88 62;  /*LightBlue*/
+        --primary-foreground: 209 88 62; /*LightBlue*/
         --secondary: 210 40% 96.1%;
         --secondary-foreground: 222.2 47.4% 11.2%;
         --muted: 210 40% 96.1%;

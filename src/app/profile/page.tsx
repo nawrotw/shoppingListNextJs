@@ -19,7 +19,7 @@ export default function ProfilePage() {
 
   return (<>
     <Header title='Profile'></Header>
-    <ViewContent>
+    <ViewContent className='relative'>
       <ThemePicker className='absolute right-1 top-1'/>
       <Button
         variant='outline'
