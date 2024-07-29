@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { TrashIcon } from "lucide-react";
 import FilterNotCheckedIcon from "@/icons/filters/FilterNotCheckedIcon";
 import { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/tailwindUtils";
@@ -19,6 +18,7 @@ export const filterIcon: Record<FilterType, ReactNode> = {
   ALREADY_BOUGHT: <FilterCheckedIcon/>,
 }
 
+/*
 const getItemsLeftText = (count?: number) => {
   switch (count || 0) {
     case 0:
@@ -28,6 +28,7 @@ const getItemsLeftText = (count?: number) => {
   }
   return `${count} items left`;
 }
+*/
 
 export interface FilterBarProps {
   filterType: FilterType;
@@ -37,12 +38,12 @@ export interface FilterBarProps {
 
 export const FilterBar = (props: FilterBarProps) => {
 
-  const { filterType, onFilterChange, itemsLeftCount } = props;
+  const { filterType, onFilterChange/*, itemsLeftCount*/ } = props;
 
   return <div className='p-2 flex items-center gap-1'>
-    <Button variant='outline' size='icon'>
-      <TrashIcon/>
-    </Button>
+    {/*<Button variant='outline' size='icon'>*/}
+    {/*  <TrashIcon/>*/}
+    {/*</Button>*/}
     <SelectedButton isSelected={filterType === 'ALL'} onClick={() => onFilterChange?.('ALL')}>
       <FilterIcon/> All
     </SelectedButton>
@@ -52,7 +53,7 @@ export const FilterBar = (props: FilterBarProps) => {
     <SelectedButton isSelected={filterType === 'ALREADY_BOUGHT'} onClick={() => onFilterChange?.('ALREADY_BOUGHT')}>
       <FilterCheckedIcon/> Already bought
     </SelectedButton>
-    <div className='whitespace-nowrap p-2'>{getItemsLeftText(itemsLeftCount)}</div>
+    {/*<div className='whitespace-nowrap p-2'>{getItemsLeftText(itemsLeftCount)}</div>*/}
   </div>
 }
 
