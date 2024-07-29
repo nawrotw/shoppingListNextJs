@@ -9,6 +9,7 @@ import { useSelection } from "@/utils/useSelection";
 import { shoppingListUpdateProductChecked } from "@/domain/shoppingList/shoppingListActions";
 import { sort } from "fast-sort";
 import { ShoppingList, ShoppingListProduct } from "@/db/schema";
+import { FilterType, filterMap } from "@/components/composite/FilterBar";
 
 export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 
@@ -30,16 +31,25 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
   });
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState<FilterType>('ALL');
+
 
   const filtered = useMemo<ShoppingListProduct[]>(() =>
       listProducts
+        .filter(product => filterMap[filterType](product.checked))
         .filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .map(product => ({
           ...product,
           checked: selectedProductIds.has(product.id),
         })),
-    [listProducts, selectedProductIds, searchTerm]
+    [listProducts, selectedProductIds, searchTerm, filterType]
   );
+
+  const itemsLeftCount = useMemo(() => {
+    if (!listProducts) return -1;
+    return listProducts.reduce((count, todo) => todo.checked ? count : count + 1, 0);
+  }, [listProducts]);
+
 
   return (<>
     <Header
@@ -54,6 +64,7 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
       <HeaderActionBar
         searchTerm={searchTerm}
         onSearchTermChange={setSearchTerm}
+        filter={{ filterType, onFilterChange: setFilterType, itemsLeftCount }}
       />
     </Header>
     <ViewContent>
