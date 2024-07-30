@@ -3,13 +3,14 @@
 import { Header } from "@/components/composite/Header";
 import { ViewContent } from "@/components/composite/ViewContent";
 import { HeaderActionBar } from "@/components/composite/HeaderActionBar";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useTransition, useCallback } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";
 import { shoppingListUpdateProductChecked } from "@/domain/shoppingList/shoppingListActions";
 import { sort } from "fast-sort";
 import { ShoppingList, ShoppingListProduct } from "@/db/schema";
 import { FilterType, filterMap } from "@/components/composite/FilterBar";
+import { usePendingIds } from "@/infrastructure/hooks/usePendingIds";
 
 export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 
@@ -22,12 +23,6 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
       items: listProducts.filter(item => item.checked),
       getById: listProduct => listProduct.id,
     },
-    onChange: useCallback((listProductId: number, selectedIds: Map<number, boolean>) => {
-      setTimeout(() => {
-        // Cannot update a component (`Router`) while rendering a different component (`ShoppingListItemsView`)
-        shoppingListUpdateProductChecked(list.id, listProductId, selectedIds.has(listProductId));
-      })
-    }, [list.id])
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,6 +39,19 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
         })),
     [listProducts, selectedProductIds, searchTerm, filterType]
   );
+
+  const [, startToggleTransition] = useTransition();
+
+  const { isPending, addId, removeId } = usePendingIds();
+
+  const handleItemClick = useCallback((id: number, selected: boolean) => {
+    addId(id);
+    toggleSelect(id, selected);
+    startToggleTransition(async () => {
+      await shoppingListUpdateProductChecked(list.id, id, !selected);
+      removeId(id);
+    });
+  }, [addId, list.id, removeId, toggleSelect]);
 
   const itemsLeftCount = useMemo(() => {
     if (!listProducts) return -1;
@@ -74,7 +82,8 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
           key={product.id}
           {...product}
           selected={product.checked}
-          onClick={toggleSelect}
+          pending={isPending(product.id)}
+          onClick={handleItemClick}
         />
       ))}
     </ViewContent>

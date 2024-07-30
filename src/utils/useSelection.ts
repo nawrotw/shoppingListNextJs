@@ -7,14 +7,13 @@ interface InitiallySelected<T, Id> {
 
 export interface UseSelectionProps<T, Id> {
   initiallySelected: InitiallySelected<T, Id>;
-  onChange?: (id: Id, selectedIds: Map<Id, boolean>) => void;
 }
 
-type RetType<Id> = [Map<Id, boolean>, (id: Id) => void];
+type RetType<Id> = [Map<Id, boolean>, (id: Id, selected: boolean) => void];
 
 export const useSelection = <T, Id>(props: UseSelectionProps<T, Id>): RetType<Id> => {
 
-  const { initiallySelected, onChange } = props;
+  const { initiallySelected } = props;
 
   const [selectedIds, setSelectedIds] = useState<Map<Id, boolean>>(initiallySelected.items
     .reduce((acc: Map<Id, boolean>, item: T) => {
@@ -24,20 +23,19 @@ export const useSelection = <T, Id>(props: UseSelectionProps<T, Id>): RetType<Id
   );
 
   const toggleSelect = useCallback(
-    (id: Id) => {
+    (id: Id, selected: boolean) => {
       setSelectedIds(ids => {
         // this will be fired 2x in Strict mode
         const selectedIds = new Map(ids); // shallow copy
-        if (selectedIds.has(id)) {
+        if (selected) {
           selectedIds.delete(id);
         } else {
           selectedIds.set(id, true);
         }
-        onChange?.(id, selectedIds);
         return selectedIds;
       });
     },
-    [onChange]
+    []
   );
 
 

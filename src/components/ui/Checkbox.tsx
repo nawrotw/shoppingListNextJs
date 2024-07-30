@@ -12,15 +12,16 @@ export interface CheckboxProps {
   className?: string;
   children?: ReactNode;
   textGap?: number;
+  size?: number | string;
 }
 
 export const Checkbox = (props: CheckboxProps) => {
-  const { checked, mixed, children, className, textGap } = props;
+  const { checked, mixed, children, className, textGap, size } = props;
 
   return <div className={cn(`flex gap-${textGap ?? 2}`, className)}>
-    {checked && <CheckedIcon/>}
-    {!checked && !mixed && <UncheckedIcon/>}
-    {!checked && mixed && <CheckboxMixedIcon/>}
+    {checked && <CheckedIcon size={size}/>}
+    {!checked && !mixed && <UncheckedIcon size={size}/>}
+    {!checked && mixed && <CheckboxMixedIcon size={size}/>}
     {children}
   </div>
 }

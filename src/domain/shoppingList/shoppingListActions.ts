@@ -61,9 +61,8 @@ export async function deleteShoppingList(id: number) {
 // === ShoppingList.Products ===
 // =============================
 export async function shoppingListUpdateProductChecked(listId: number, listProductId: number, checked: boolean) {
-
   await db.update(shoppingListProducts)
-    .set({checked})
+    .set({ checked })
     .where(eq(shoppingListProducts.id, listProductId))
 
   revalidateDBShoppingLists(listId);

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { memo, ReactNode, Fragment } from "react";
 import { AlignJustifyIcon } from "lucide-react";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { Spinner } from "@/components/ui/spinner";
 
 export type ProductListItemActions = 'reorder';
 
@@ -14,16 +15,18 @@ const actionsMap: Record<ProductListItemActions, ReactNode> = {
 export interface ProductListItem extends Product {
   href?: string;
   selected?: boolean;
-  onClick?: (id: number) => void;
+  pending?: boolean;
+  onClick?: (id: number, checked: boolean) => void;
   actions?: ProductListItemActions[];
 }
 
 export const ProductRow = memo((props: ProductListItem) => {
-  const { id, name, unit, href, selected, onClick, actions } = props
+  const { id, name, unit, href, selected, pending, onClick, actions } = props
 
   // console.log('render', name); // performance check
   const handleClick = () => {
-    onClick?.(id)
+    if (selected === undefined) return;
+    onClick?.(id, selected);
   }
 
   return <Link
@@ -32,7 +35,8 @@ export const ProductRow = memo((props: ProductListItem) => {
     className='-mx-4 px-4 h-16 border-b flex items-center'
   >
     <div className='flex items-center'>
-      {selected !== undefined && <Checkbox checked={selected} className='mr-2'/>}
+      {pending && <Spinner className='mr-2 w-6' size='small'/>}
+      {!pending && selected !== undefined && <Checkbox checked={selected} className='mr-2 w-6'/>}
       <div className='truncate hover:text-clip'>{name}</div>
       <div className='ml-2 text-sm text-muted-foreground whitespace-nowrap w-8'>[{unit}]</div>
     </div>
