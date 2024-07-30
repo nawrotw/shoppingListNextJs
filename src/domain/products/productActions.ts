@@ -2,10 +2,10 @@
 
 import { z } from "zod"
 import { redirect } from "next/navigation"
-import { revalidatePath } from "next/cache"
 import { db } from "@/db/db";
 import { products, ProductUnit } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { revalidateDBProducts } from "@/domain/products/ProductsRepo";
 
 
 const addSchema = z.object({
@@ -25,8 +25,7 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
 
   await db.insert(products).values(result.data);
 
-  revalidatePath("/")
-  revalidatePath("/products")
+  revalidateDBProducts();
 
   redirect("/products"); // TODO wkn pass from parameters?
 }
@@ -47,8 +46,7 @@ export async function updateProduct(
     .set(result.data)
     .where(eq(products.id, id));
 
-  revalidatePath("/");
-  revalidatePath("/products");
+  revalidateDBProducts(id);
 
   redirect("/products");
 }
@@ -59,8 +57,8 @@ export async function deleteProduct(id: number) {
   db.delete(products).where(eq(products.id, id));
   // if (product == null) return notFound() ?? needed
 
-  revalidatePath("/")
-  revalidatePath("/products")
+  revalidateDBProducts(id);
+
 
   redirect("/products");
 }

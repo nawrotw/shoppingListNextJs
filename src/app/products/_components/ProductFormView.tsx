@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { DeleteConfirmationDialog } from "@/components/composite/DeleteComfirmationDialog";
 import { cn } from "@/lib/tailwindUtils";
-import { addProduct, updateProduct, deleteProduct } from "@/app/products/_actions/productActions";
+import { addProduct, updateProduct, deleteProduct } from "@/domain/products/productActions";
 
 export interface ShoppingListFormViewProps {
   product?: Product | null;

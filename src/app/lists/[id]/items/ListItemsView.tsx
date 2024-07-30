@@ -7,16 +7,13 @@ import { useState, useMemo, useTransition, useCallback } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";
 import { shoppingListUpdateProductChecked } from "@/domain/shoppingList/shoppingListActions";
-import { sort } from "fast-sort";
 import { ShoppingList, ShoppingListProduct } from "@/db/schema";
 import { FilterType, filterMap } from "@/components/composite/FilterBar";
 import { usePendingIds } from "@/infrastructure/hooks/usePendingIds";
 
 export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 
-  const listProducts = useMemo(() =>
-      sort(list.products || []).asc([p => p.checked, p => p.name])
-    , [list]);
+  const listProducts = useMemo(() => list.products || [], [list]);
 
   const [selectedProductIds, toggleSelect] = useSelection({
     initiallySelected: {
