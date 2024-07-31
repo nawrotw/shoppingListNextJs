@@ -68,6 +68,14 @@ export async function shoppingListUpdateProductChecked(listId: number, listProdu
   revalidateDBShoppingLists(listId);
 }
 
+export async function shoppingListProductsResetDone(listId: number) {
+  await db.update(shoppingListProducts)
+    .set({ checked: false })
+    .where(eq(shoppingListProducts.shoppingListId, listId))
+
+  revalidateDBShoppingLists(listId);
+}
+
 export async function shoppingListUpdateProducts(listId: number, products: Product[]) {
   if (!listId || !products) {
     return notFound(); // requestError

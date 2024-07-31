@@ -9,7 +9,7 @@ export interface UseSelectionProps<T, Id> {
   initiallySelected: InitiallySelected<T, Id>;
 }
 
-type RetType<Id> = [Map<Id, boolean>, (id: Id, selected: boolean) => void];
+type RetType<Id> = [Map<Id, boolean>, (id: Id, selected: boolean) => void, () => void];
 
 export const useSelection = <T, Id>(props: UseSelectionProps<T, Id>): RetType<Id> => {
 
@@ -38,9 +38,11 @@ export const useSelection = <T, Id>(props: UseSelectionProps<T, Id>): RetType<Id
     []
   );
 
+  const resetSelected = () => setSelectedIds(new Map());
 
   return [
     selectedIds,
     toggleSelect,
+    resetSelected
   ];
 }

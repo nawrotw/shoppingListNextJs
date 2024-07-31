@@ -6,7 +6,7 @@ import { HeaderActionBar } from "@/components/composite/HeaderActionBar";
 import { useState, useMemo, useTransition, useCallback } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";
-import { shoppingListUpdateProductChecked } from "@/domain/shoppingList/shoppingListActions";
+import { shoppingListUpdateProductChecked, shoppingListProductsResetDone } from "@/domain/shoppingList/shoppingListActions";
 import { ShoppingList, ShoppingListProduct } from "@/db/schema";
 import { FilterType, filterMap } from "@/components/composite/FilterBar";
 import { usePendingIds } from "@/infrastructure/hooks/usePendingIds";
@@ -15,7 +15,7 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 
   const listProducts = useMemo(() => list.products || [], [list]);
 
-  const [selectedProductIds, toggleSelect] = useSelection({
+  const [selectedProductIds, toggleSelect, resetSelected] = useSelection({
     initiallySelected: {
       items: listProducts.filter(item => item.checked),
       getById: listProduct => listProduct.id,
@@ -56,6 +56,14 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
   }, [listProducts]);
 
 
+  const [isResetPending, startResetTransition] = useTransition();
+  const handleResetDone = () => {
+    startResetTransition(async () => {
+      await shoppingListProductsResetDone(list.id);
+      resetSelected(); // this should not be needed, but somehow next.js refuse to refresh
+    });
+  }
+
   return (<>
     <Header
       title={list.name}
@@ -69,7 +77,13 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
       <HeaderActionBar
         searchTerm={searchTerm}
         onSearchTermChange={setSearchTerm}
-        filter={{ filterType, onFilterChange: setFilterType, itemsLeftCount }}
+        filter={{
+          itemsLeftCount,
+          filterType,
+          onFilterChange: setFilterType,
+          isResetPending: isResetPending,
+          onResetDone: handleResetDone
+        }}
       />
     </Header>
     <ViewContent>

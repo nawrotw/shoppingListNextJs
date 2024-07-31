@@ -1,25 +1,25 @@
 import { db } from "@/db/db";
 import { eq, asc } from "drizzle-orm";
 import { products } from "@/db/schema";
-import { cacheRepoWrapper } from "@/infrastructure/cache/cacheRepoWrapper";
 import { cacheRevalidatePaths } from "@/infrastructure/cache/cacheRevalidatePaths";
+import { cache } from "@/infrastructure/cache/cache";
 
-const cacheKeys: Record<string, string> = {
+const cacheKeys = {
   view: '/products', // static view with products
   findAll: 'DB/products',
-  findById: 'DB/products/:id',
+  findById: (id: number) => `DB/products/${id}`,
 }
 
 export const revalidateDBProducts = (id?: number) => cacheRevalidatePaths(Object.values(cacheKeys), id);
 
-export const productsRepo = cacheRepoWrapper(cacheKeys, {
-  findAll: () =>
+export const productsRepo = {
+  findAll: cache(() =>
     db.query.products.findMany({
       orderBy: [asc((products.name))],
-    }),
-  findById: (id: number) =>
+    }), [cacheKeys.findAll]),
+  findById: (id: number) => cache(() =>
     db.query.products.findFirst({
       where: eq(products.id, id),
-    })
-});
+    }), [cacheKeys.findById(id)])()
+};
 
