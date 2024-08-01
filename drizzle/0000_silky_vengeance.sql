@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS "shopping_lists_products" (
 	"name" varchar(256) NOT NULL,
 	"unit" "productUnits" NOT NULL,
 	"checked" boolean NOT NULL,
+	"order" smallint NOT NULL,
 	"product_id" integer NOT NULL,
 	"shopping_list_id" integer NOT NULL
 );

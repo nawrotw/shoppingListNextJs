@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/tailwindUtils";
 
-export interface LinkButtonProps {
+export interface CaptionCardProps {
   title: string;
   className?: string;
   children?: ReactNode;
 }
 
-export const CaptionCard = ({ title, children, className }: LinkButtonProps) => {
+export const CaptionCard = ({ title, children, className }: CaptionCardProps) => {
   return <div
     className={cn('inline-block relative mt-0 p-4 border rounded text-foreground min-w-20', className)}
   >

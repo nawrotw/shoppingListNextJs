@@ -63,11 +63,12 @@ export async function initShoppingList(productEntities: Product[]) {
   console.log(`Inserted ShoppingList id: ${shoppingListId}, products count: ${productEntities.length}`);
 
   const shoppingListProductsData: Array<NewShoppingListProduct> = productEntities
-    .map(({ id, name, unit }) => {
+    .map(({ id, name, unit }, index) => {
       return {
         name,
         unit,
         checked: false,
+        order: index,
         productId: id,
         shoppingListId: shoppingListId,
       }

@@ -1,4 +1,4 @@
-import { integer, pgEnum, pgTable, serial, uniqueIndex, varchar, boolean, } from 'drizzle-orm/pg-core';
+import { integer, pgEnum, pgTable, serial, uniqueIndex, varchar, boolean, smallint} from 'drizzle-orm/pg-core';
 import { relations } from "drizzle-orm";
 
 /*
@@ -47,11 +47,15 @@ export const shoppingListProducts = pgTable('shopping_lists_products', {
   name: varchar('name', { length: 256 }).notNull(),
   unit: productUnitsEnum('unit').notNull(),
   checked: boolean('checked').notNull(),
+  order: smallint('order').notNull(),
   productId: integer('product_id').references(() => products.id, { onDelete: "restrict" }).notNull(),
   shoppingListId: integer('shopping_list_id').references(() => shoppingLists.id, { onDelete: "restrict" }).notNull(),
 }, (entity) => ({
   nameIndex: uniqueIndex('shopping_list_product_name_uniq_idx').on(entity.name),
 }));
+
+export type ShoppingListProduct = typeof shoppingListProducts.$inferSelect;
+export type NewShoppingListProduct = typeof shoppingListProducts.$inferInsert;
 
 export const shoppingListProductsRelations = relations(shoppingListProducts, ({ one }) => ({
   author: one(shoppingLists, {
@@ -60,8 +64,6 @@ export const shoppingListProductsRelations = relations(shoppingListProducts, ({ 
   }),
 }));
 
-export type ShoppingListProduct = typeof shoppingListProducts.$inferSelect;
-export type NewShoppingListProduct = typeof shoppingListProducts.$inferInsert;
 
 export type ShoppingList = typeof shoppingLists.$inferSelect & { products?: ShoppingListProduct[] };
 export type NewShoppingList = typeof shoppingLists.$inferInsert;

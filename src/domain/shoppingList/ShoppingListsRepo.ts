@@ -1,5 +1,5 @@
 import { db } from "@/db/db";
-import { shoppingLists, products } from "@/db/schema";
+import { shoppingLists, shoppingListProducts } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { cacheRevalidatePaths } from "@/infrastructure/cache/cacheRevalidatePaths";
 import { cache } from "@/infrastructure/cache/cache";
@@ -20,7 +20,7 @@ export const shoppingListsRepo = {
     db.query.shoppingLists.findMany({
       with: {
         products: {
-          orderBy: [asc((products.name))],
+          orderBy: [asc((shoppingListProducts.order)), asc((shoppingListProducts.name))],
         }
       }
     }), [cacheKeys.findAll]),
@@ -29,7 +29,7 @@ export const shoppingListsRepo = {
       where: eq(shoppingLists.id, id),
       with: {
         products: {
-          orderBy: [asc((products.name))],
+          orderBy: [asc((shoppingListProducts.order)), asc((shoppingListProducts.name))],
         }
       }
     }), [cacheKeys.findById(id)])()

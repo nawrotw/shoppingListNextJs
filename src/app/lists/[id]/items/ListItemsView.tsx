@@ -3,13 +3,16 @@
 import { Header } from "@/components/composite/Header";
 import { ViewContent } from "@/components/composite/ViewContent";
 import { HeaderActionBar } from "@/components/composite/HeaderActionBar";
-import { useState, useMemo, useTransition, useCallback } from "react";
+import { useState, useMemo, useTransition, useCallback, useEffect } from "react";
 import { ProductRow } from "@/app/products/_components/ProductRow";
 import { useSelection } from "@/utils/useSelection";
-import { shoppingListUpdateProductChecked, shoppingListProductsResetDone } from "@/domain/shoppingList/shoppingListActions";
+import { shoppingListUpdateProductChecked, shoppingListProductsResetDone, shoppingListProductsUpdateOrder } from "@/domain/shoppingList/shoppingListActions";
 import { ShoppingList, ShoppingListProduct } from "@/db/schema";
 import { FilterType, filterMap } from "@/components/composite/FilterBar";
 import { usePendingIds } from "@/infrastructure/hooks/usePendingIds";
+
+import { SortableListItems } from "@/app/lists/[id]/items/SortableListItems";
+import { arraysEqualShallow } from "@/utils/arrayUtils";
 
 export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
 
@@ -64,6 +67,40 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
     });
   }
 
+  const [isSort, setIsSort] = useState(false);
+  const [isSortPending, startSortTransition] = useTransition();
+  const [orderedItems, setOrderedItems] = useState(filtered);
+
+  useEffect(() => {
+    setOrderedItems(filtered);
+  }, [filtered]);
+
+  const handleSortCancel = () => {
+    setIsSort(false);
+    setOrderedItems(filtered);
+  }
+  const handleSortSave = () => {
+    startSortTransition(async () => {
+      // TODO wkn we could write here some logic to detect only changes
+      const oldOrder = filtered.map(({ id }) => id);
+      const newOrder = orderedItems.map(({ id }) => id);
+      if (!arraysEqualShallow(oldOrder, newOrder)) {
+        await shoppingListProductsUpdateOrder(list.id, newOrder);
+      }
+      setIsSort(false);
+    });
+  }
+
+  const renderProductRow = (product: ShoppingListProduct) => {
+    return <ProductRow
+      key={product.id}
+      {...product}
+      selected={product.checked}
+      pending={isPending(product.id)}
+      onClick={handleItemClick}
+    />
+  }
+
   return (<>
     <Header
       title={list.name}
@@ -84,19 +121,23 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
           isResetPending: isResetPending,
           onResetDone: handleResetDone
         }}
+        sort={{
+          pending: isSortPending,
+          open: isSort,
+          onStart: () => setIsSort(true),
+          onConfirm: handleSortSave,
+          onCancel: handleSortCancel
+        }}
       />
     </Header>
     <ViewContent>
-      {filtered.length === 0 && <p className='text-center mt-6'>No items</p>}
-      {filtered.map(product => (
-        <ProductRow
-          key={product.id}
-          {...product}
-          selected={product.checked}
-          pending={isPending(product.id)}
-          onClick={handleItemClick}
-        />
-      ))}
+      {orderedItems.length === 0 && <p className='text-center mt-6'>No items</p>}
+      {isSort && <SortableListItems
+        items={orderedItems}
+        onReorder={setOrderedItems}
+        render={product => renderProductRow(product)}
+      />}
+      {!isSort && orderedItems.map(product => renderProductRow(product))}
     </ViewContent>
   </>);
 }
