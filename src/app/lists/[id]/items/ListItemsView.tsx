@@ -11,7 +11,7 @@ import { ShoppingList, ShoppingListProduct } from "@/db/schema";
 import { FilterType, filterMap } from "@/components/composite/FilterBar";
 import { usePendingIds } from "@/infrastructure/hooks/usePendingIds";
 
-import { SortableListItems } from "@/app/lists/[id]/items/SortableListItems";
+import { SortableListItems } from "@/app/lists/[id]/items/_components/SortableListItems";
 import { arraysEqualShallow } from "@/utils/arrayUtils";
 
 export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {

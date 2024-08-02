@@ -1,6 +1,6 @@
 import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, KeyboardSensor, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
-import { SortableItem } from "@/app/lists/[id]/items/SortableItem";
+import { SortableItem } from "@/app/lists/[id]/items/_components/SortableItem";
 import { ReactNode } from "react";
 import { ShoppingListProduct } from "@/db/schema";
 

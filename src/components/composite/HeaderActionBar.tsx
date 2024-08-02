@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { ChangeEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FilterBarProps, FilterBar, filterIcon } from "@/components/composite/FilterBar";
-import { SortProps } from "@/app/lists/[id]/items/SortableListItems";
+import { SortProps } from "@/app/lists/[id]/items/_components/SortableListItems";
 import { SortButton } from "@/components/composite/header/sortButton/SortButton";
 
 interface SelectProps {

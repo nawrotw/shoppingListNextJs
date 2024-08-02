@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MenuIcon, X, CheckIcon } from "lucide-react";
-import { SortProps } from "@/app/lists/[id]/items/SortableListItems";
+import { SortProps } from "@/app/lists/[id]/items/_components/SortableListItems";
 import { Spinner } from "@/components/ui/spinner";
 
 export const SortButton = (props: SortProps) => {
