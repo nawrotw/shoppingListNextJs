@@ -19,7 +19,7 @@ interface AddProductsViewProps {
   products: Product[];
 }
 
-const actions: ProductListItemActions[] = ["reorder"];
+const actions: ProductListItemActions[] = [];
 
 export const ShoppingListEditProductsView = ({ list, products }: AddProductsViewProps) => {
 

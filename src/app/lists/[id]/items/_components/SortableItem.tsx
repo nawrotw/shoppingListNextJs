@@ -33,7 +33,7 @@ export const SortableItem = (props: SortableItemProps) => {
 
   return (
     <div className='flex items-center' ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <div className='flex-1 -mr-6'>{children}</div>
+      <div className='flex-1 -mr-6 pointer-events-none'>{children}</div>
       <MenuIcon/>
     </div>
   );

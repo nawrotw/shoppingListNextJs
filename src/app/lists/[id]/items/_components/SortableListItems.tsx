@@ -4,14 +4,6 @@ import { SortableItem } from "@/app/lists/[id]/items/_components/SortableItem";
 import { ReactNode } from "react";
 import { ShoppingListProduct } from "@/db/schema";
 
-export interface SortProps {
-  pending: boolean;
-  open: boolean;
-  onStart: () => void;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
-
 export interface SortableListItemsProps {
   items: ShoppingListProduct[];
   onReorder: (items: ShoppingListProduct[]) => void;

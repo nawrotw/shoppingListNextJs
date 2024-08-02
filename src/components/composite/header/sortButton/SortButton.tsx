@@ -1,9 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { MenuIcon, X, CheckIcon } from "lucide-react";
-import { SortProps } from "@/app/lists/[id]/items/_components/SortableListItems";
 import { Spinner } from "@/components/ui/spinner";
 
-export const SortButton = (props: SortProps) => {
+export interface SortButtonProps {
+  pending: boolean;
+  open: boolean;
+  onStart: () => void;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+export const SortButton = (props: SortButtonProps) => {
 
   const { pending, open, onStart, onConfirm, onCancel } = props;
 
@@ -14,7 +21,8 @@ export const SortButton = (props: SortProps) => {
   }
   // we have save/cancel here
   return (
-    <div className='flex border-l ml-4 pl-4'>
+    <div className='flex flex-1 items-center'>
+      <div className='flex-1 text-right border-r p-2 mr-4 pr-4'>Reorder Products</div>
       <Button variant="outline" size="icon" onClick={onCancel} disabled={pending}>
         <X/>
       </Button>

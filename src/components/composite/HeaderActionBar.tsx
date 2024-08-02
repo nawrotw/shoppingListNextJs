@@ -3,8 +3,7 @@ import { Input } from "@/components/ui/input";
 import { ChangeEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FilterBarProps, FilterBar, filterIcon } from "@/components/composite/FilterBar";
-import { SortProps } from "@/app/lists/[id]/items/_components/SortableListItems";
-import { SortButton } from "@/components/composite/header/sortButton/SortButton";
+import { SortButton, SortButtonProps } from "@/components/composite/header/sortButton/SortButton";
 
 interface SelectProps {
   selectedCount: number;
@@ -16,7 +15,7 @@ export interface HeaderActionBarProps {
   onSearchTermChange: (term: string) => void;
   select?: SelectProps;
   filter?: FilterBarProps;
-  sort?: SortProps;
+  sort?: SortButtonProps;
 }
 
 export const HeaderActionBar = (props: HeaderActionBarProps) => {
@@ -39,12 +38,12 @@ export const HeaderActionBar = (props: HeaderActionBarProps) => {
 
   return <div>
     <div className='p-2 flex items-center gap-1'>
-      <Input value={searchTerm} onChange={handleSearchTermChange}/>
+      {!sort?.open && <Input value={searchTerm} onChange={handleSearchTermChange}/>}
       {select &&
         <div>{select.selectedCount}/{select.totalCount}</div>
       }
 
-      {filter && <Button variant="outline" size='icon' onClick={handleToggleShowFilter}>
+      {!sort?.open && filter && <Button variant="outline" size='icon' onClick={handleToggleShowFilter}>
         {filterIcon[filter.filterType]}
       </Button>}
       {sort && <SortButton {...sort}/>}
