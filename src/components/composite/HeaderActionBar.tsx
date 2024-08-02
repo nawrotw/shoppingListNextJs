@@ -38,12 +38,12 @@ export const HeaderActionBar = (props: HeaderActionBarProps) => {
 
   return <div>
     <div className='p-2 flex items-center gap-1'>
-      {!sort?.open && <Input value={searchTerm} onChange={handleSearchTermChange}/>}
+      <Input className='flex-1' value={searchTerm} onChange={handleSearchTermChange}/>
       {select &&
         <div>{select.selectedCount}/{select.totalCount}</div>
       }
 
-      {!sort?.open && filter && <Button variant="outline" size='icon' onClick={handleToggleShowFilter}>
+      {filter && <Button variant="outline" size='icon' onClick={handleToggleShowFilter}>
         {filterIcon[filter.filterType]}
       </Button>}
       {sort && <SortButton {...sort}/>}

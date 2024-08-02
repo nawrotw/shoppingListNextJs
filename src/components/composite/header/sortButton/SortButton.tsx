@@ -21,8 +21,7 @@ export const SortButton = (props: SortButtonProps) => {
   }
   // we have save/cancel here
   return (
-    <div className='flex flex-1 items-center'>
-      <div className='flex-1 text-right border-r p-2 mr-4 pr-4'>Reorder Products</div>
+    <div className='flex border-l ml-4 pl-4'>
       <Button variant="outline" size="icon" onClick={onCancel} disabled={pending}>
         <X/>
       </Button>
