@@ -18,11 +18,8 @@ export function NavLink(props: NavLinkProps) {
   );
 
   return <Link {...restProps} className={cn(
-    "flex-1 flex justify-center",
-    "p-4 hover:bg-secondary hover:text-secondary-foreground",
-    // "focus-visible:bg-secondary focus-visible:text-secondary-foreground",
+    "flex-1 flex justify-center border p-4 hover:bg-secondary",
     isCurrentPath && "text-primary-foreground",
-    'border',
     className
   )}
   >
