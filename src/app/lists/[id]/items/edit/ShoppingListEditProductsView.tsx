@@ -63,10 +63,7 @@ export const ShoppingListEditProductsView = ({ list, products }: AddProductsView
         onClick: handleSave
       }}
     >
-      <HeaderActionBar
-        searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
-      />
+      <HeaderActionBar search={{ searchTerm, onSearchTermChange: setSearchTerm }}/>
     </Header>
     <ViewContent>
       {filteredItems.map((product) => {

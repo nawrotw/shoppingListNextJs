@@ -112,8 +112,7 @@ export const ShoppingListItemsView = ({ list }: { list: ShoppingList }) => {
       }}
     >
       <HeaderActionBar
-        searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
+        search={{ searchTerm, onSearchTermChange: setSearchTerm }}
         filter={{
           itemsLeftCount,
           filterType,

@@ -15,10 +15,7 @@ export default function ProductListView({ products }: { products: Product[] }) {
 
   return (<>
     <Header title='Products' right={{ icon: 'plus', href: 'products/new' }}>
-      <HeaderActionBar
-        searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
-      />
+      <HeaderActionBar search={{ searchTerm, onSearchTermChange: setSearchTerm }}/>
     </Header>
     <ViewContent>
       {filtered.map((product) => (

@@ -1,9 +1,9 @@
 'use client'
-import { Input } from "@/components/ui/input";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FilterBarProps, FilterBar, filterIcon } from "@/components/composite/FilterBar";
 import { SortButton, SortButtonProps } from "@/components/composite/header/sortButton/SortButton";
+import { SearchFieldProps, SearchField } from "@/components/ui/SearchField";
 
 interface SelectProps {
   selectedCount: number;
@@ -11,20 +11,14 @@ interface SelectProps {
 }
 
 export interface HeaderActionBarProps {
-  searchTerm: string;
-  onSearchTermChange: (term: string) => void;
+  search: SearchFieldProps;
   select?: SelectProps;
   filter?: FilterBarProps;
   sort?: SortButtonProps;
 }
 
 export const HeaderActionBar = (props: HeaderActionBarProps) => {
-  const {
-    searchTerm,
-    onSearchTermChange,
-    select, filter,
-    sort,
-  } = props;
+  const { select, filter, search, sort } = props;
 
   const [showFilterBar, setShowFilterBar] = useState(false);
 
@@ -32,13 +26,9 @@ export const HeaderActionBar = (props: HeaderActionBarProps) => {
     setShowFilterBar(!showFilterBar);
   }
 
-  const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onSearchTermChange(e.currentTarget.value);
-  }
-
   return <div>
     <div className='p-2 flex items-center gap-1'>
-      <Input className='flex-1' value={searchTerm} onChange={handleSearchTermChange}/>
+      {search && <SearchField className='flex-1' {...search}/>}
       {select &&
         <div>{select.selectedCount}/{select.totalCount}</div>
       }

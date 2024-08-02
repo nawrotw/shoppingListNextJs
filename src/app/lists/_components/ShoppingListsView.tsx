@@ -22,10 +22,7 @@ export const ShoppingListsView = ({ lists }: { lists: ShoppingList[] }) => {
       left={{ icon: 'plus', href: 'lists/new' }}
       right={{ text: !isEditMode ? 'Edit' : 'Done', onClick: () => setIsEditMode(mode => !mode) }}
     >
-      <HeaderActionBar
-        searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
-      />
+      <HeaderActionBar search={{ searchTerm, onSearchTermChange: setSearchTerm }}/>
     </Header>
     <ViewContent>
       {filteredLists.map((item) => (
