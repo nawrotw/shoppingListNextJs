@@ -55,7 +55,7 @@ export const ShoppingListEditProductsView = ({ list, products }: AddProductsView
 
   return (<>
     <Header
-      title={`Edit ${list.name}`}
+      title='Add/Remove Products'
       left={{ text: 'Cancel', onClick: () => router.back() }}
       right={{
         text: isPending ? 'Save...' : 'Save',

@@ -4,8 +4,10 @@ import { db } from "@/db/db";
 import { z } from "zod"
 import { notFound, redirect } from "next/navigation"
 import { revalidateDBShoppingLists, shoppingListsRepo } from "@/domain/shoppingList/ShoppingListsRepo";
-import { shoppingLists, Product, NewShoppingListProduct, shoppingListProducts } from "@/db/schema";
+import { shoppingLists, Product, shoppingListProducts } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { updateMany } from "@/db/utils/updateMany";
+import { shoppingListProductsUpdate } from "@/domain/shoppingList/shoppingListUtils";
 
 const addSchema = z.object({
   name: z.string().min(1),
@@ -76,6 +78,11 @@ export async function shoppingListProductsResetDone(listId: number) {
   revalidateDBShoppingLists(listId);
 }
 
+export async function shoppingListProductsUpdateOrder(listId: number, newOrders: Array<number>) {
+  await updateMany(newOrders);
+  revalidateDBShoppingLists(listId);
+}
+
 export async function shoppingListUpdateProducts(listId: number, products: Product[]) {
   if (!listId || !products) {
     return notFound(); // requestError
@@ -86,24 +93,11 @@ export async function shoppingListUpdateProducts(listId: number, products: Produ
     return notFound();
   }
 
-  const newListProducts: NewShoppingListProduct[] = products.map(({ id, name, unit }) => {
-    const existingProduct = shoppingList.products.find(existingProduct => existingProduct.productId === id);
-    if (existingProduct) { // we want to preserve Products which are already on the list (could have been already checked)
-      return existingProduct;
-    }
-    return {
-      name,
-      unit,
-      checked: false,
-      productId: id,
-      shoppingListId: listId
-    }
-  });
-
   await db.delete(shoppingListProducts)
     .where(eq(shoppingListProducts.shoppingListId, listId));
 
-  await db.insert(shoppingListProducts).values(newListProducts)
+  await db.insert(shoppingListProducts)
+    .values(shoppingListProductsUpdate(listId, shoppingList.products, products))
 
   revalidateDBShoppingLists(listId);
   redirect(`/lists/${listId}/items`);
