@@ -15,7 +15,8 @@ const fontSans = Roboto({
 
 export const viewport: Viewport = {
   initialScale: 1,
-  width: 'device-width'
+  width: 'device-width',
+  userScalable: false
 }
 export const metadata: Metadata = {
   title: "Shopping List",
